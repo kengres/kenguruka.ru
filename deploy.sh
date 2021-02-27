@@ -1,1 +1,0 @@
-scp -r dist/ root@188.225.37.148:/var/www/kenguruka/app.kenguruka.ru/
