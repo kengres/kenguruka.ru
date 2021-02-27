@@ -43,7 +43,7 @@ export default {
 <style lang="scss">
 .depense-item {
   background-color: rgba(185, 221, 236, 0.748);
-  width: 280px;
+  width: 100%;
   border-radius: 6px;
   box-shadow: 2px 2px 6px 1px rgba(0, 0, 0, 0.15);
   padding: 1rem;

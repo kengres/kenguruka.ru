@@ -1,29 +1,33 @@
 <template>
   <div class="home">
-    <section class="depenses">
-      <h2 class="depenses__heading">
-        <span class="depenses__title">Depenses</span>
-        <span class="depenses__total">{{ total }}</span>
-        <button class="depenses__add" @click="modalVisible = true">Add</button>
-      </h2>
+    <gk-container>
+      <section class="depenses">
+        <h2 class="depenses__heading">
+          <span class="depenses__title">Depenses</span>
+          <span class="depenses__total">{{ total }}</span>
+          <button class="depenses__add" @click="modalVisible = true">
+            Add
+          </button>
+        </h2>
 
-      <ul class="depenses__list">
-        <li class="depenses__item" v-for="(dep, i) in depenses" :key="i">
-          <depenses-item
-            :title="dep.title"
-            :amount="dep.price"
-            :date="dep.createdAt"
-            :delete="() => onDelete(dep)"
-          />
-        </li>
-      </ul>
-      <modal :visible="modalVisible" @close="modalVisible = false">
-        <depenses-add ref="add" @close="onAfterSubmit" />
-        <template v-slot:footer>
-          <button class="depenses__button" @click="onSubmit">submit</button>
-        </template>
-      </modal>
-    </section>
+        <ul class="depenses__list">
+          <li class="depenses__item" v-for="(dep, i) in depenses" :key="i">
+            <depenses-item
+              :title="dep.title"
+              :amount="dep.price"
+              :date="dep.createdAt"
+              :delete="() => onDelete(dep)"
+            />
+          </li>
+        </ul>
+        <modal :visible="modalVisible" @close="modalVisible = false">
+          <depenses-add ref="add" @close="onAfterSubmit" />
+          <template v-slot:footer>
+            <button class="depenses__button" @click="onSubmit">submit</button>
+          </template>
+        </modal>
+      </section>
+    </gk-container>
   </div>
 </template>
 
@@ -33,13 +37,15 @@ import LForage from "localforage";
 import DepensesItem from "@/components/Depenses/DepensesItem.vue";
 import Modal from "../components/Reusable/Modal.vue";
 import DepensesAdd from "../components/Depenses/DepensesAdd.vue";
+import GkContainer from "../components/Reusable/GkContainer.vue";
 
 export default {
   name: "Home",
   components: {
     DepensesItem,
     Modal,
-    DepensesAdd
+    DepensesAdd,
+    GkContainer
   },
   data() {
     return {
@@ -101,7 +107,8 @@ export default {
 
 <style lang="scss">
 .depenses {
-  width: 280px;
+  width: 100%;
+  padding: 0 1.2rem;
   &__heading {
     display: flex;
     align-items: center;
