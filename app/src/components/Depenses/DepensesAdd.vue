@@ -7,7 +7,7 @@
       <my-input type="number" v-model="form.amount" />
     </div>
     <div class="depenses-add__item">
-      <my-select :options="currencies" v-model="form.currency" />
+      <my-select :options="currencies" v-model="form.currencyId" />
     </div>
   </div>
 </template>
@@ -29,7 +29,7 @@ export default {
       form: {
         name: "",
         amount: 0,
-        currency: ""
+        currencyId: ""
       },
       currencies: []
     };
@@ -49,6 +49,7 @@ export default {
           mutation: DEPENSES_ADD_MUTATION,
           variables
         })
+        this.$emit('close')
       } catch (error) {
         console.log(`error add: `, error);
       }

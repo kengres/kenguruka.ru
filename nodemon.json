@@ -4,7 +4,7 @@
     ".git",
     "node_modules/**/node_modules",
     "admin",
-    "app.kenguruka",
+    "app",
     "**/__tests__/**",
     "*.test.js",
     "*.spec.js",
