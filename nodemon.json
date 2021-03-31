@@ -1,0 +1,16 @@
+{
+  "restartable": "rs",
+  "ignore": [
+    ".git",
+    "node_modules/**/node_modules",
+    "admin",
+    "client",
+    "**/__tests__/**",
+    "*.test.js",
+    "*.spec.js",
+    "*.**.md",
+    "*.**.sh"
+  ],
+  "ext": "js,json",
+  "delay": "1000"
+}
