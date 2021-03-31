@@ -4,7 +4,7 @@
     ".git",
     "node_modules/**/node_modules",
     "admin",
-    "client",
+    "app",
     "**/__tests__/**",
     "*.test.js",
     "*.spec.js",
