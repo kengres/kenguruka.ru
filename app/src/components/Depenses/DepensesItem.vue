@@ -1,12 +1,12 @@
-<template>
+<template functional>
   <div class="depense-item">
-    <button class="depense-item__delete" @click="$props.delete">X</button>
-    <div class="depense-item__title">{{ $props.title }}</div>
-    <div class="depense-item__date">{{ $props.date }}</div>
+    <button class="depense-item__delete" @click="props.delete">X</button>
+    <div class="depense-item__title">{{ props.title }}</div>
+    <div class="depense-item__date">{{ $options.formatDate(props.date) }}</div>
     <div class="depense-item__price">
-      <span class="depense-item__amount">{{ $props.amount }}</span>
-      <span class="depense-item__currency" v-show="$props.currency">{{
-        $props.currency
+      <span class="depense-item__amount">{{ props.amount }}</span>
+      <span class="depense-item__currency" v-show="props.currency">{{
+        props.currency
       }}</span>
     </div>
   </div>
@@ -36,6 +36,9 @@ export default {
       type: Function,
       default: () => {}
     }
+  },
+  formatDate(date) {
+    return new Date(date).toLocaleDateString()
   }
 };
 </script>

@@ -4,7 +4,9 @@
       <div class="modal__inner">
         <div class="modal__header">
           <slot name="header"></slot>
-          <button class="modal__close" @click="$emit('close')">close</button>
+          <div class="modal__close">
+            <yotta-button icon @click="$emit('close')">close</yotta-button>
+          </div>
         </div>
         <div class="modal__body">
           <slot></slot>
@@ -18,8 +20,10 @@
 </template>
 
 <script>
+import YottaButton from './Button'
 export default {
   name: "Modal",
+  components: { YottaButton },
   props: {
     visible: {
       type: Boolean,

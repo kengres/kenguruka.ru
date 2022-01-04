@@ -8,7 +8,8 @@
   "license": "MIT",
   "private": true,
   "scripts": {
-    "dev": "nodemon server.js"
+    "dev": "nodemon server.js",
+    "app": "yarn --cwd app serve"
   },
   "dependencies": {
     "apollo-server-express": "^2.22.2",

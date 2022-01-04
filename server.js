@@ -9,6 +9,8 @@ const PORT = process.env.PORT || 4000;
 const server = new ApolloServer({
   typeDefs,
   resolvers,
+  introspection: true,
+  playground: true,
   context: async ({ req }) => {
     return {};
   },
@@ -16,6 +18,16 @@ const server = new ApolloServer({
 
 const app = express();
 const apiPath = '/graphql';
+
+app.get('*', (req, res, next) => {
+  console.log(req.method, req.url)
+  const customPort = process.env.NODE_ENV === "production" ? "" : `:${PORT}`;
+  const webAddress = `${req.protocol}://${req.hostname}${customPort}${req.baseUrl}${req.path}`;
+  console.log(`req url: `, webAddress)
+  next()
+})
+
+app.get('/', (req, res) => res.send('Hello World!'))
 
 server.applyMiddleware({ app, apiPath });
 

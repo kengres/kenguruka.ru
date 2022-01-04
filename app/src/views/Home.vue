@@ -5,9 +5,7 @@
         <h2 class="depenses__heading">
           <span class="depenses__title">Depenses</span>
           <span class="depenses__total">{{ total }}</span>
-          <button class="depenses__add" @click="modalVisible = true">
-            Add
-          </button>
+          <yotta-button @click="onAdd">Add</yotta-button>
         </h2>
 
         <ul class="depenses__list">
@@ -26,7 +24,7 @@
     <modal :visible="modalVisible" @close="modalVisible = false">
       <depenses-add ref="add" @close="onAfterSubmit" />
       <template v-slot:footer>
-        <button class="depenses__button" @click="onSubmit">submit</button>
+        <yotta-button type="primary" @click="onSubmit">submit</yotta-button>
       </template>
     </modal>
   </div>
@@ -39,8 +37,9 @@ import GkContainer from '@/components/Reusable/GkContainer.vue';
 import DepensesItem from '@/components/Depenses/DepensesItem.vue';
 import Modal from '@/components/Reusable/Modal.vue';
 import DepensesAdd from '@/components/Depenses/DepensesAdd.vue';
+import YottaButton from '@/components/Reusable/Button'
 export default {
-  components: { GkContainer, DepensesItem, Modal, DepensesAdd },
+  components: { GkContainer, DepensesItem, Modal, DepensesAdd, YottaButton },
   name: 'Home',
   data () {
     return {
@@ -64,6 +63,10 @@ export default {
     }
   },
   methods: {
+    onAdd() {
+      this.modalVisible = true;
+      console.log(`on add....`)
+    },
     onSubmit() {
       this.$refs.add.onSubmit();
     },

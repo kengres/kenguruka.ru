@@ -1,7 +1,8 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
-import Home from '../views/Home.vue'
 import LayoutDefault from '../layouts/Default'
+import Home from '../views/Home.vue'
+import Currencies from '../views/Currencies.vue'
 
 Vue.use(VueRouter)
 
@@ -14,6 +15,11 @@ const routes = [
         path: '/',
         name: 'Home',
         component: Home,
+      },
+      {
+        path: '/currencies',
+        name: 'Currencies',
+        component: Currencies,
       }
     ]
   }

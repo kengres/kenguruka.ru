@@ -7,7 +7,7 @@
       <my-input type="number" v-model="form.amount" />
     </div>
     <div class="depenses-add__item">
-      <my-select :options="currencies" v-model="form.currencyId" />
+      <my-select :options="currencies" v-model="form.currencyId" label="abbreviation" />
     </div>
   </div>
 </template>
