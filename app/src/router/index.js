@@ -1,8 +1,8 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
 import LayoutDefault from '../layouts/Default'
-import Home from '../views/Home.vue'
-import Currencies from '../views/Currencies.vue'
+import Home from '../pages/Home.vue'
+import Currencies from '../pages/Currencies.vue'
 
 Vue.use(VueRouter)
 

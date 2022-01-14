@@ -2,12 +2,13 @@
   <div class="home">
     <gk-container>
       <section class="depenses">
-        <h2 class="depenses__heading">
+        <h1 class="depenses__heading">
           <span class="depenses__title">Depenses</span>
-          <span class="depenses__total">{{ total }}</span>
-          <yotta-button @click="onAdd">Add</yotta-button>
-        </h2>
-
+        </h1>
+        <div class="depenses__total">
+          <h2 class="depenses__subtitle">Total</h2>
+          <div class="depenses__amount">{{ total }}</div>
+        </div>
         <ul class="depenses__list">
           <li class="depenses__item" v-for="(dep, i) in depenses" :key="i">
             <depenses-item
@@ -19,12 +20,15 @@
           </li>
         </ul>
       </section>
+      <div class="depenses__add">
+        <yotta-button circle icon @click="onAdd">+</yotta-button>
+      </div>
     </gk-container>
 
     <modal :visible="modalVisible" @close="modalVisible = false">
       <depenses-add ref="add" @close="onAfterSubmit" />
       <template v-slot:footer>
-        <yotta-button type="primary" @click="onSubmit">submit</yotta-button>
+        <yotta-button type="success" @click="onSubmit">submit</yotta-button>
       </template>
     </modal>
   </div>
@@ -100,13 +104,24 @@ export default {
 <style lang="scss">
 .depenses {
   width: 100%;
-  padding: 0 1.2rem;
   &__heading {
-    display: flex;
-    align-items: center;
+    text-align: center;
+    padding: 10px;
+    margin-bottom: 12px;
   }
   &__total {
-    margin-left: 1rem;
+    background-color: #08BE51;
+    border-radius: 4px;
+    padding: 18px;
+    color: #e6e6e6;
+    text-align: center;
+    margin-left: 10px;
+    margin-right: 10px;
+  }
+  &__amount {
+    font-size: 48px;
+    font-weight: 700;
+    margin-top: 24px;
   }
   &__add {
     margin-left: auto;
@@ -114,13 +129,19 @@ export default {
   &__list {
     list-style-type: none;
     padding: 0;
+    margin-top: 20px;
   }
   &__item {
-    margin-bottom: 1rem;
-
-    &:last-of-type {
-      margin-bottom: 0;
+    background-color: transparent;
+    &:nth-of-type(even) {
+      background-color: #F7F7F7;
     }
+  }
+  &__add {
+    position: absolute;
+    bottom: 40px;
+    right: 20px;
+    font-size: 36px;
   }
 }
 </style>

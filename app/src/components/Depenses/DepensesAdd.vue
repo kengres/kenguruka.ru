@@ -7,7 +7,7 @@
       <my-input type="number" v-model="form.amount" />
     </div>
     <div class="depenses-add__item">
-      <my-select :options="currencies" v-model="form.currencyId" label="abbreviation" />
+      <my-select :options="currencies" v-model="form.currency" label="abbreviation" />
     </div>
   </div>
 </template>
@@ -29,7 +29,7 @@ export default {
       form: {
         name: "",
         amount: 0,
-        currencyId: ""
+        currency: ""
       },
       currencies: []
     };
@@ -41,6 +41,7 @@ export default {
     async onSubmit() {
       const variables = {
         ...this.form,
+        currencyId: this.form.currency && this.form.currency.id,
         amount: +this.form.amount,
       };
       console.log(`newItem: `, variables);
