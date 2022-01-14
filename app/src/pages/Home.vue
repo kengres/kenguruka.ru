@@ -7,13 +7,13 @@
         </h1>
         <div class="depenses__total">
           <h2 class="depenses__subtitle">Total</h2>
-          <div class="depenses__amount">{{ total }}</div>
+          <div class="depenses__amount">{{ total | amountFilter }}</div>
         </div>
         <ul class="depenses__list">
           <li class="depenses__item" v-for="(dep, i) in depenses" :key="i">
             <depenses-item
               :title="dep.name"
-              :amount="dep.displayedAmount"
+              :amount="moneyFilterVal(dep.amount)"
               :date="dep.createdAt"
               :delete="() => onDelete(dep)"
             />
@@ -42,9 +42,15 @@ import DepensesItem from '@/components/Depenses/DepensesItem.vue';
 import Modal from '@/components/Reusable/Modal.vue';
 import DepensesAdd from '@/components/Depenses/DepensesAdd.vue';
 import YottaButton from '@/components/Reusable/Button'
+import { moneyFilter } from '@/utils/filters'
 export default {
   components: { GkContainer, DepensesItem, Modal, DepensesAdd, YottaButton },
   name: 'Home',
+  filters: {
+    amountFilter (val) {
+      return moneyFilter(val)
+    }
+  },
   data () {
     return {
       modalVisible: false,
@@ -64,6 +70,11 @@ export default {
         .reduce((a, b) => {
           return a + b;
         }, 0);
+    },
+    moneyFilterVal () {
+      return val => {
+        return moneyFilter(val)
+      }
     }
   },
   methods: {
