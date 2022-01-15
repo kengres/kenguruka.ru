@@ -2,7 +2,6 @@ const Category = require("../../models/category");
 
 module.exports = {
   categories: async (_p, _i) => {
-    console.log(`[CATEGORIES] list`);
     let filters = {}
     
     try {

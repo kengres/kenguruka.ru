@@ -2,12 +2,12 @@ const Currency = require("../../models/currency");
 
 module.exports = {
   currencies: async (_p, _i) => {
-    console.log(`[CURRENCIES] list`);
+    // console.log(`[CURRENCIES] list`);
     let filters = {}
     
     try {
       const result = await Currency.find(filters)
-      console.log(`result: `, result)
+      // console.log(`result: `, result)
       return result
     } catch (e) {
       console.log(`e: `, e)

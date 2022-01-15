@@ -21,7 +21,7 @@
         </ul>
       </section>
       <div class="depenses__add">
-        <yotta-button circle icon @click="onAdd">+</yotta-button>
+        <add-button @click="onAdd" />
       </div>
     </gk-container>
 
@@ -43,8 +43,16 @@ import Modal from '@/components/Reusable/Modal.vue';
 import DepensesAdd from '@/components/Depenses/DepensesAdd.vue';
 import YottaButton from '@/components/Reusable/Button'
 import { moneyFilter } from '@/utils/filters'
+import AddButton from '../components/Reusable/AddButton.vue';
 export default {
-  components: { GkContainer, DepensesItem, Modal, DepensesAdd, YottaButton },
+  components: {
+    GkContainer,
+    DepensesItem,
+    Modal,
+    DepensesAdd,
+    YottaButton,
+    AddButton, 
+  },
   name: 'Home',
   filters: {
     amountFilter (val) {
@@ -134,9 +142,6 @@ export default {
     font-weight: 700;
     margin-top: 24px;
   }
-  &__add {
-    margin-left: auto;
-  }
   &__list {
     list-style-type: none;
     padding: 0;
@@ -152,7 +157,6 @@ export default {
     position: absolute;
     bottom: 40px;
     right: 20px;
-    font-size: 36px;
   }
 }
 </style>

@@ -2,12 +2,12 @@ const Depense = require("../../models/depense");
 
 module.exports = {
   depenses: async (_p, _i) => {
-    console.log(`[DEPENSES] list`);
+    // console.log(`[DEPENSES] list`);
     let filters = {}
     
     try {
       const result = await Depense.find(filters).sort("-createdAt")
-      console.log(`result: `, result)
+      // console.log(`result: `, result)
       return result
     } catch (e) {
       console.log(`e: `, e)
