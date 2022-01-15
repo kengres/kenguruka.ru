@@ -1,8 +1,9 @@
 const mongoose = require('mongoose');
+const { MODEL_NAMES } = require('./_utils');
 
 const Schema = mongoose.Schema;
 
-const userSchema = new Schema({
+const _schema = new Schema({
   active: {
     type: Boolean,
     default: false
@@ -43,4 +44,4 @@ const userSchema = new Schema({
   }]
 }, { timestamps: true });
 
-module.exports = mongoose.model('User', userSchema);
+module.exports = mongoose.model(MODEL_NAMES.user, _schema);

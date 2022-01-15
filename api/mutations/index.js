@@ -1,7 +1,9 @@
-const depense = require("./depense");
+const category = require("./category");
 const currency = require("./currency");
+const depense = require("./depense");
 
 module.exports = {
-  ...depense,
+  ...category,
   ...currency,
+  ...depense,
 };
