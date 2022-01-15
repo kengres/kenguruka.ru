@@ -15,7 +15,7 @@
               :title="dep.name"
               :amount="moneyFilterVal(dep.amount)"
               :category-name="dep.category && dep.category.name"
-              :date="dep.createdAt"
+              :date="dateFilterVal(dep.createdAt)"
               :delete="() => onDelete(dep)"
             />
           </li>
@@ -43,7 +43,7 @@ import DepensesItem from '@/components/Depenses/DepensesItem.vue';
 import Modal from '@/components/Reusable/Modal.vue';
 import DepensesAdd from '@/components/Depenses/DepensesAdd.vue';
 import YottaButton from '@/components/Reusable/Button'
-import { moneyFilter } from '@/utils/filters'
+import { moneyFilter, dateTimeFilter } from '@/utils/filters'
 import AddButton from '../components/Reusable/AddButton.vue';
 export default {
   components: {
@@ -58,7 +58,10 @@ export default {
   filters: {
     amountFilter (val) {
       return moneyFilter(val)
-    }
+    },
+    dateFilter (val) {
+      return dateTimeFilter(val)
+    },
   },
   data () {
     return {
@@ -84,7 +87,12 @@ export default {
       return val => {
         return moneyFilter(val)
       }
-    }
+    },
+    dateFilterVal () {
+      return val => {
+        return dateTimeFilter(val)
+      }
+    },
   },
   methods: {
     onAdd() {
@@ -155,9 +163,10 @@ export default {
     }
   }
   &__add {
-    position: absolute;
+    position: fixed;
     bottom: 40px;
     right: 20px;
+    z-index: 100;
   }
 }
 </style>

@@ -6,7 +6,7 @@
       <div class="depense-item__amount">{{ props.amount }}</div>
     </div>
     <div class="depense-item__footer">
-      <div class="depense-item__date">{{ $options.formatDate(props.date) }}</div>
+      <div class="depense-item__date">{{ props.date }}</div>
       <div class="depense-item__category" v-if="props.categoryName">{{ props.categoryName }}</div>
     </div>
     <div class="depense-item__price">
@@ -46,9 +46,6 @@ export default {
       default: () => {}
     }
   },
-  formatDate(date) {
-    return new Date(date).toLocaleDateString()
-  }
 };
 </script>
 

@@ -165,7 +165,7 @@ export default {
     }
   }
   &__add {
-    position: absolute;
+    position: fixed;
     bottom: 40px;
     right: 20px;
     font-size: 36px;
