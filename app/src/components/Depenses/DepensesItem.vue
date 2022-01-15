@@ -6,8 +6,8 @@
       <div class="depense-item__amount">{{ props.amount }}</div>
     </div>
     <div class="depense-item__footer">
-      <div class="depense-item__date">{{ $options.formatDate(props.date) }}</div>
-      <!-- <div class="depense-item__amount">{{ props.amount }}</div> -->
+      <div class="depense-item__date">{{ props.date }}</div>
+      <div class="depense-item__category" v-if="props.categoryName">{{ props.categoryName }}</div>
     </div>
     <div class="depense-item__price">
       <span class="depense-item__currency" v-show="props.currency">{{
@@ -33,6 +33,10 @@ export default {
       type: String,
       default: ""
     },
+    categoryName: {
+      type: String,
+      default: ""
+    },
     amount: {
       type: [Number, String],
       default: 0
@@ -42,9 +46,6 @@ export default {
       default: () => {}
     }
   },
-  formatDate(date) {
-    return new Date(date).toLocaleDateString()
-  }
 };
 </script>
 
@@ -80,6 +81,10 @@ export default {
     position: absolute;
     top: 1rem;
     right: 1rem;
+  }
+  &__category {
+    color: #08BE51;
+    text-transform: capitalize;
   }
 }
 </style>

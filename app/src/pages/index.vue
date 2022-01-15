@@ -14,14 +14,15 @@
             <depenses-item
               :title="dep.name"
               :amount="moneyFilterVal(dep.amount)"
-              :date="dep.createdAt"
+              :category-name="dep.category && dep.category.name"
+              :date="dateFilterVal(dep.createdAt)"
               :delete="() => onDelete(dep)"
             />
           </li>
         </ul>
       </section>
       <div class="depenses__add">
-        <yotta-button circle icon @click="onAdd">+</yotta-button>
+        <add-button @click="onAdd" />
       </div>
     </gk-container>
 
@@ -42,14 +43,25 @@ import DepensesItem from '@/components/Depenses/DepensesItem.vue';
 import Modal from '@/components/Reusable/Modal.vue';
 import DepensesAdd from '@/components/Depenses/DepensesAdd.vue';
 import YottaButton from '@/components/Reusable/Button'
-import { moneyFilter } from '@/utils/filters'
+import { moneyFilter, dateTimeFilter } from '@/utils/filters'
+import AddButton from '../components/Reusable/AddButton.vue';
 export default {
-  components: { GkContainer, DepensesItem, Modal, DepensesAdd, YottaButton },
+  components: {
+    GkContainer,
+    DepensesItem,
+    Modal,
+    DepensesAdd,
+    YottaButton,
+    AddButton, 
+  },
   name: 'Home',
   filters: {
     amountFilter (val) {
       return moneyFilter(val)
-    }
+    },
+    dateFilter (val) {
+      return dateTimeFilter(val)
+    },
   },
   data () {
     return {
@@ -75,7 +87,12 @@ export default {
       return val => {
         return moneyFilter(val)
       }
-    }
+    },
+    dateFilterVal () {
+      return val => {
+        return dateTimeFilter(val)
+      }
+    },
   },
   methods: {
     onAdd() {
@@ -134,9 +151,6 @@ export default {
     font-weight: 700;
     margin-top: 24px;
   }
-  &__add {
-    margin-left: auto;
-  }
   &__list {
     list-style-type: none;
     padding: 0;
@@ -149,10 +163,10 @@ export default {
     }
   }
   &__add {
-    position: absolute;
+    position: fixed;
     bottom: 40px;
     right: 20px;
-    font-size: 36px;
+    z-index: 100;
   }
 }
 </style>

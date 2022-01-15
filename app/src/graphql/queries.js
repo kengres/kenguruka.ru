@@ -6,6 +6,10 @@ export const DEPENSES_QUERY = gql`
       id
       name
       amount
+      category {
+        id
+        name
+      }
       displayedAmount
       createdAt
       updatedAt

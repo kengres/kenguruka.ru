@@ -2,8 +2,9 @@
   <nav class="nav-menu">
     <div class="gk-container">
       <div class="nav-menu__links">
-        <router-link active-class="is-active" class="nav-menu__link" to="/">Home</router-link>
+        <router-link exact active-class="is-active" class="nav-menu__link" to="/">Home</router-link>
         <router-link active-class="is-active" class="nav-menu__link" to="/currencies">Currencies</router-link>
+        <router-link active-class="is-active" class="nav-menu__link" to="/categories">Categories</router-link>
       </div>
     </div>
   </nav>

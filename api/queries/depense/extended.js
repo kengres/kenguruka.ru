@@ -1,5 +1,6 @@
 const User = require("../../models/user");
 const Currency = require("../../models/currency");
+const Category = require("../../models/category");
 const { Types: { ObjectId } } = require('mongoose')
 
 const dateToString = date => {
@@ -47,6 +48,24 @@ module.exports = {
         }
         if (isValidObjectId(_parent.currency)) {
           return await Currency.findById(_parent.currency)
+        }
+      }
+      return null
+    } catch (error) {
+      console.log(`error created by: `, error)
+      return null
+    }
+  },
+  category: async (_parent, _input,) => {
+    // if (!currentUser) return null
+    console.log(`_parent`, _parent)
+    try {
+      if (_parent.category) {
+        if (isInstance(_parent.category, Category)) {
+          return _parent.category
+        }
+        if (isValidObjectId(_parent.category)) {
+          return await Category.findById(_parent.category)
         }
       }
       return null

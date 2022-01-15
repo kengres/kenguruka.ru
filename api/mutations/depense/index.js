@@ -1,17 +1,24 @@
 const Depense = require('../../models/depense');
 const Currency = require('../../models/currency');
+const Category = require('../../models/category');
 const { each: _each } = require("lodash")
 const { UserInputError, ForbiddenError } = require('apollo-server-express');
 
 module.exports = {
-  createDepense: async (_p, { name, notes, amount = 1, currencyId }) => {
+  createDepense: async (_p, input) => {
+    const { name, notes, amount = 1, currencyId, categoryId } = input;
+    console.log(`categoryId`, categoryId)
     if (!name || !currencyId) {
       throw new UserInputError('Invalid Data! name, currency: required!')
     }
     try {
-      const currency = Currency.findById(currencyId);
+      const currency = await Currency.findById(currencyId);
       if (!currency) {
         throw new UserInputError('Invalid Currency!')
+      }
+      let category;
+      if (categoryId) {
+        category = await Category.findById(categoryId)
       }
       
       const newItem = new Depense({
@@ -19,6 +26,7 @@ module.exports = {
         notes,
         amount,
         currency: currencyId,
+        category: category && category.id,
       });
 
       await newItem.save()

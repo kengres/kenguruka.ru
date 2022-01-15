@@ -8,10 +8,6 @@ const _schema = new Schema({
     type: String,
     default: ""
   },
-  abbreviation: {
-    type: String,
-    default: ""
-  },
   createdBy: {
     type: Schema.Types.ObjectId,
     ref: MODEL_NAMES.user,
@@ -22,4 +18,4 @@ const _schema = new Schema({
   },
 }, { timestamps: true });
 
-module.exports = mongoose.model(MODEL_NAMES.currency, _schema);
+module.exports = mongoose.model(MODEL_NAMES.category, _schema);

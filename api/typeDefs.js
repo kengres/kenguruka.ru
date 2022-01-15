@@ -20,6 +20,7 @@ module.exports = gql`
     displayedAmount: String
     date: String
     currency: Currency
+    category: Category
     createdAt: String
     updatedAt: String
     createdBy: User
@@ -36,6 +37,15 @@ module.exports = gql`
     updatedBy: User
   }
 
+  type Category {
+    id: ID!
+    name: String!
+    createdAt: String
+    updatedAt: String
+    createdBy: User
+    updatedBy: User
+  }
+
   type Query {
     # me: User
     # users: [User!]!
@@ -46,6 +56,9 @@ module.exports = gql`
     # CURRENCIES
     currencies: [Currency!]!
     currency(id: ID!): Currency
+    # CATEGORIES
+    categories: [Category!]!
+    category(id: ID!): Category
   }
 
   type Mutation {
@@ -58,12 +71,28 @@ module.exports = gql`
     # logUserIn(email: String! password: String!): AuthData!
     # refreshTokens(token: String! refreshToken: String!): AuthData!
     # DEPENSES
-    createDepense(name: String! notes: String amount: Int currencyId: ID!): Depense
-    updateDepense(id: ID! name: String notes: String amount: Int currencyId: ID): Depense
+    createDepense(
+      name: String!
+      notes: String
+      amount: Int
+      currencyId: ID!
+      categoryId: ID
+    ): Depense
+    updateDepense(
+      id: ID!
+      name: String
+      notes: String
+      amount: Int
+      currencyId: ID
+    ): Depense
     deleteDepense(id: ID!): Depense
     # CURRENCIES
-    createCurrency(name: String! abbreviation: String!): Currency
-    updateCurrency(id: ID! name: String abbreviation: String): Currency
+    createCurrency(name: String!, abbreviation: String!): Currency
+    updateCurrency(id: ID!, name: String, abbreviation: String): Currency
     deleteCurrency(id: ID!): Currency
+    # CATEGORIES
+    createCategory(name: String!): Category
+    updateCategory(id: ID!, name: String): Category
+    deleteCategory(id: ID!): Category
   }
 `;

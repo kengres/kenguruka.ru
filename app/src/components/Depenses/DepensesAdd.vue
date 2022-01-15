@@ -7,6 +7,9 @@
       <my-input type="number" v-model="form.amount" />
     </div>
     <div class="depenses-add__item">
+      <my-select :options="categories" v-model="form.category" label="name" />
+    </div>
+    <div class="depenses-add__item">
       <my-select :options="currencies" v-model="form.currency" label="abbreviation" />
     </div>
   </div>
@@ -16,6 +19,7 @@
 import MyInput from "@/components/Reusable/Input";
 import MySelect from "@/components/Reusable/Select";
 import { CURRENCIES_QUERY } from '@/graphql/queries';
+import { CATEGORIES_QUERY } from '@/graphql/categories';
 import { DEPENSES_ADD_MUTATION } from '@/graphql/mutations';
 
 export default {
@@ -29,19 +33,23 @@ export default {
       form: {
         name: "",
         amount: 0,
-        currency: ""
+        currency: "",
+        category: "",
       },
-      currencies: []
+      currencies: [],
+      categories: [],
     };
   },
   apollo: {
-    currencies: CURRENCIES_QUERY
+    currencies: CURRENCIES_QUERY,
+    categories: CATEGORIES_QUERY,
   },
   methods: {
     async onSubmit() {
       const variables = {
-        ...this.form,
+        name: this.form.name,
         currencyId: this.form.currency && this.form.currency.id,
+        categoryId: this.form.category && this.form.category.id,
         amount: +this.form.amount,
       };
       console.log(`newItem: `, variables);
