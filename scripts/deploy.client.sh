@@ -3,7 +3,7 @@ cd app
 yarn build
 tar czf app.kenguruka.tar.gz dist
 scp -r app.kenguruka.tar.gz kengres@217.25.93.162:~
-rm kenguruka.tar.gz
+rm app.kenguruka.tar.gz
 
 ssh kengres@217.25.93.162 << 'ENDSSH'
 cd sites/kenguruka/app.kenguruka.ru

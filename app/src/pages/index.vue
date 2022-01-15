@@ -10,7 +10,7 @@
           <div class="depenses__amount">{{ total | amountFilter }}</div>
         </div>
         <ul class="depenses__list">
-          <li class="depenses__item" v-for="(dep, i) in depenses" :key="i">
+          <li class="depenses__item" v-for="(dep, i) in depenses" :key="i" @click="onBeforeEdit(dep)">
             <depenses-item
               :title="dep.name"
               :amount="moneyFilterVal(dep.amount)"
@@ -27,7 +27,7 @@
     </gk-container>
 
     <modal :visible="modalVisible" @close="modalVisible = false">
-      <depenses-add ref="add" @close="onAfterSubmit" />
+      <depenses-add ref="add" @close="onAfterSubmit" :depense-edit="depenseEdit" />
       <template v-slot:footer>
         <yotta-button type="success" @click="onSubmit">submit</yotta-button>
       </template>
@@ -36,7 +36,7 @@
 </template>
 
 <script>
-import { DEPENSES_QUERY } from "@/graphql/queries";
+import { DEPENSES_QUERY } from "@/graphql/depenses";
 import { DEPENSES_DELETE_MUTATION } from "@/graphql/mutations";
 import GkContainer from '@/components/Reusable/GkContainer.vue';
 import DepensesItem from '@/components/Depenses/DepensesItem.vue';
@@ -67,6 +67,7 @@ export default {
     return {
       modalVisible: false,
       depenses: [],
+      depenseEdit: null,
     }
   },
   apollo: {
@@ -92,7 +93,7 @@ export default {
       return val => {
         return dateTimeFilter(val)
       }
-    },
+    }
   },
   methods: {
     onAdd() {
@@ -105,6 +106,7 @@ export default {
     onAfterSubmit() {
       this.updateData();
       this.modalVisible = false;
+      this.depenseEdit = null;
     },
     async onDelete(item) {
       console.log(`on delet: `, item)
@@ -120,6 +122,10 @@ export default {
         console.log(`delete error: `, error)
       }
     },
+    onBeforeEdit (depense) {
+      this.depenseEdit = depense
+      this.modalVisible = true
+    },
     updateData () {
       if (this.$apollo.queries.depenses) {
         this.$apollo.queries.depenses.refetch()
@@ -132,6 +138,7 @@ export default {
 <style lang="scss">
 .depenses {
   width: 100%;
+  padding-bottom: 100px;
   &__heading {
     text-align: center;
     padding: 10px;

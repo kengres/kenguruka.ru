@@ -1,6 +1,13 @@
-const addLeadingZero = val => val < 10 ? `0${val}` : val;
+const addLeadingZero = (val) => (val < 10 ? `0${val}` : val);
 
-export const moneyFilter = val => {
+const isDateToday = (val) => {
+  return (
+    !!val &&
+    new Date(val).setHours(0, 0, 0, 0) === new Date().setHours(0, 0, 0, 0)
+  );
+};
+
+export const moneyFilter = (val) => {
   if (!val) return "";
   return `${val}`
     .split("")
@@ -11,12 +18,15 @@ export const moneyFilter = val => {
     })
     .reverse()
     .join("");
-}
+};
 
-export const dateTimeFilter = val => {
+export const dateTimeFilter = (val) => {
   if (!val) return "";
   const d = new Date(val);
-  return `${addLeadingZero(d.getDate())}-${addLeadingZero(
+  if (isDateToday(d)) {
+    return `${addLeadingZero(d.getHours())}:${addLeadingZero(d.getMinutes())}`;
+  }
+  return `${addLeadingZero(d.getDate())}.${addLeadingZero(
     d.getMonth() + 1
-  )}-${d.getFullYear()}`;
-}
+  )}.${d.getFullYear()}`;
+};

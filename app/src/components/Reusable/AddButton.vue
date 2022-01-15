@@ -23,6 +23,7 @@ export default {
 
 <style lang="scss" scoped>
 .btn {
+  --btn-size: 48px;
   display: inline-flex;
   align-items: center;
   flex: 0 0 auto;
@@ -34,8 +35,8 @@ export default {
   vertical-align: middle;
   transition: 0.3s;
   cursor: pointer;
-  height: 48px;
-  width: 48px;
+  height: var(--btn-size);
+  width: var(--btn-size);
   display: inline-flex;
   justify-content: center;
   align-items: center;
@@ -46,7 +47,7 @@ export default {
   font-size: 36px;
   color: #fff;
   background-color: #08843A;
-  box-shadow: 2px 4px 54px rgba(0, 0, 0, 0.1);
+  box-shadow: 2px 4px 30px rgba(0, 0, 0, 0.1);
 
   &:hover {
     opacity: 0.8;

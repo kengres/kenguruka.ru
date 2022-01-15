@@ -36,7 +36,8 @@ module.exports = {
       throw error
     }
   },
-  updateDepense: async (_p, { id, name, notes, amount, currencyId }) => {
+  updateDepense: async (_p, input) => {
+    const { id, name, notes, amount, currencyId, categoryId } = input;
     if (!id) {
       throw new UserInputError('Invalid Data! id is required!')
     }
@@ -46,9 +47,15 @@ module.exports = {
         throw Error('Depense Not Found!');
       }
       if (currencyId) {
-        const currency = Currency.findById(currencyId);
+        const currency = await Currency.findById(currencyId);
         if (!currency) {
           throw new UserInputError('Invalid Currency!')
+        }
+      }
+      if (categoryId) {
+        const category = await Category.findById(categoryId);
+        if (category) {
+          item.category = category.id
         }
       }
       item.currency = currencyId

@@ -21,12 +21,19 @@ import MySelect from "@/components/Reusable/Select";
 import { CURRENCIES_QUERY } from '@/graphql/queries';
 import { CATEGORIES_QUERY } from '@/graphql/categories';
 import { DEPENSES_ADD_MUTATION } from '@/graphql/mutations';
+import { DEPENSES_UPDATE_MUTATION } from '@/graphql/depenses';
 
 export default {
   name: "DepensesAdd",
   components: {
     MyInput,
     MySelect,
+  },
+  props: {
+    depenseEdit: {
+      type: Object,
+      default: () => {},
+    }
   },
   data() {
     return {
@@ -44,7 +51,27 @@ export default {
     currencies: CURRENCIES_QUERY,
     categories: CATEGORIES_QUERY,
   },
+  computed: {
+    isEditMode () {
+      return !!this.depenseEdit && !!this.depenseEdit.id
+    }
+  },
+  watch: {
+    isEditMode: {
+      handler: 'updateForm',
+      immediate: true,
+    }
+  },
   methods: {
+    updateForm (isEdit) {
+      console.log(`isEditMode watch: `, isEdit)
+      if (isEdit) {
+        this.form.name = this.depenseEdit.name;
+        this.form.amount = this.depenseEdit.amount;
+        this.form.currency = this.depenseEdit.currency;
+        this.form.category = this.depenseEdit.category;
+      }
+    },
     async onSubmit() {
       const variables = {
         name: this.form.name,
@@ -52,10 +79,13 @@ export default {
         categoryId: this.form.category && this.form.category.id,
         amount: +this.form.amount,
       };
+      if (this.isEditMode) {
+        variables.id = this.depenseEdit.id;
+      }
       console.log(`newItem: `, variables);
       try {
         await this.$apollo.mutate({
-          mutation: DEPENSES_ADD_MUTATION,
+          mutation: this.isEditMode ? DEPENSES_UPDATE_MUTATION : DEPENSES_ADD_MUTATION,
           variables
         })
         this.$emit('close')

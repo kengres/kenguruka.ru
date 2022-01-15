@@ -58,7 +58,7 @@ module.exports = {
   },
   category: async (_parent, _input,) => {
     // if (!currentUser) return null
-    console.log(`_parent`, _parent)
+    // console.log(`_parent`, _parent)
     try {
       if (_parent.category) {
         if (isInstance(_parent.category, Category)) {

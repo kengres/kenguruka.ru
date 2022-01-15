@@ -169,6 +169,7 @@ export default {
     bottom: 40px;
     right: 20px;
     font-size: 36px;
+    z-index: 100;
   }
   &__footer {
     display: flex;

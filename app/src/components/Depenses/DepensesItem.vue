@@ -1,6 +1,6 @@
 <template functional>
   <div class="depense-item">
-    <button class="depense-item__delete" @click="props.delete">X</button>
+    <button class="depense-item__delete" @click.stop="props.delete">X</button>
     <div class="depense-item__heading">
       <div class="depense-item__title">{{ props.title }}</div>
       <div class="depense-item__amount">{{ props.amount }}</div>
@@ -51,11 +51,17 @@ export default {
 
 <style lang="scss">
 .depense-item {
+  $this: &;
   width: 100%;
   border-radius: 6px;
   padding: 1rem;
   position: relative;
   box-sizing: border-box;
+  &:hover {
+    #{$this}__delete {
+      display: inline-block;
+    }
+  }
   &__heading {
     display: flex;
     justify-content: space-between;
@@ -77,10 +83,11 @@ export default {
     color: #BEBEBE;
   }
   &__delete {
-    display: none;
     position: absolute;
-    top: 1rem;
-    right: 1rem;
+    right: 16px;
+    bottom: 16px;
+    display: none;
+    transition: .3s;
   }
   &__category {
     color: #08BE51;

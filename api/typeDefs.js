@@ -84,6 +84,7 @@ module.exports = gql`
       notes: String
       amount: Int
       currencyId: ID
+      categoryId: ID
     ): Depense
     deleteDepense(id: ID!): Depense
     # CURRENCIES
