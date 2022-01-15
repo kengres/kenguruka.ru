@@ -1,4 +1,5 @@
 #!/bin/bash
+cd ..
 tar czf api.kenguruka.tar.gz api server.js package.json yarn.lock
 scp -r api.kenguruka.tar.gz kengres@217.25.93.162:~
 rm api.kenguruka.tar.gz

@@ -7,7 +7,10 @@ import { LOGIN_TOKEN_NAME, REFRESH_TOKEN_NAME } from "@/utils/constants";
 Vue.use(VueApollo)
 
 // Http endpoint
-const httpEndpoint = process.env.VUE_APP_GRAPHQL_HTTP
+const isProd = process.env.NODE_ENV === 'production'
+const httpEndpoint = isProd
+  ? process.env.VUE_APP_GRAPHQL_HTTPS_PROD
+  : process.env.VUE_APP_GRAPHQL_HTTP;
 // Files URL root
 export const filesRoot = process.env.VUE_APP_FILES_ROOT || httpEndpoint.substr(0, httpEndpoint.indexOf('/graphql'))
 
