@@ -20,6 +20,7 @@ module.exports = gql`
     displayedAmount: String
     date: String
     currency: Currency
+    category: Category
     createdAt: String
     updatedAt: String
     createdBy: User
@@ -75,6 +76,7 @@ module.exports = gql`
       notes: String
       amount: Int
       currencyId: ID!
+      categoryId: ID
     ): Depense
     updateDepense(
       id: ID!
@@ -90,7 +92,7 @@ module.exports = gql`
     deleteCurrency(id: ID!): Currency
     # CATEGORIES
     createCategory(name: String!): Category
-    updateCategory(id: ID! name: String): Category
+    updateCategory(id: ID!, name: String): Category
     deleteCategory(id: ID!): Category
   }
 `;

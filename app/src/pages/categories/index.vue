@@ -3,7 +3,7 @@
     <h1 class="categories__title">Categories</h1>
     <ul class="categories__list">
       <template v-for="(cat, i) in categories">
-        <li :class="['categories__item', `is-${colors[i % colors.length]}`]" :key="cat.id">{{ cat.name }}</li>
+        <li :class="['categories__item', `is-${colors[i % colors.length]}`]" :key="cat.id" @click="onUpdateStart(cat)">{{ cat.name }}</li>
       </template>
     </ul>
     <div class="categories__add">
@@ -13,14 +13,17 @@
     <modal :visible="modalVisible" @close="modalVisible = false">
       <my-input v-model="categoryName" />
       <template v-slot:footer>
-        <my-button type="success" @click="onSubmit">submit</my-button>
+        <div class="categories__footer">
+          <my-button type="success" @click="onSubmit">submit</my-button>
+          <my-button type="danger" @click="onDelete" v-if="isEditMode">delete</my-button>
+        </div>
       </template>
     </modal>
   </div>
 </template>
 
 <script>
-import { CATEGORIES_QUERY, CATEGORIES_CREATE_MUTATION } from '@/graphql/categories';
+import { CATEGORIES_QUERY, CATEGORIES_CREATE_MUTATION, CATEGORIES_UPDATE_MUTATION, CATEGORIES_DELETE_MUTATION } from '@/graphql/categories';
 import AddButton from '../../components/Reusable/AddButton.vue';
 import Modal from '../../components/Reusable/Modal.vue';
 import MyInput from "@/components/Reusable/Input";
@@ -39,28 +42,61 @@ export default {
       colors: ['green', 'violet', 'orange', 'blue', 'purple', 'yellow'],
       modalVisible: false,
       categoryName: "",
+      categoryEdit: null,
     }
   },
   apollo: {
     categories: CATEGORIES_QUERY
+  },
+  computed: {
+    isEditMode () {
+      return !!this.categoryEdit && !!this.categoryEdit.id
+    }
   },
   methods: {
     async onSubmit () {
       const variables = {
         name: this.categoryName,
       };
-      console.log(`newItem: `, variables);
+      if (this.isEditMode) {
+        variables.id = this.categoryEdit.id;
+      }
+      // console.log(`newItem: `, variables);
       try {
         await this.$apollo.mutate({
-          mutation: CATEGORIES_CREATE_MUTATION,
+          mutation: this.isEditMode ?  CATEGORIES_UPDATE_MUTATION : CATEGORIES_CREATE_MUTATION,
           variables
         })
         this.modalVisible = false
         this.categoryName = ""
+        this.categoryEdit = null
         this.refetch()
       } catch (error) {
         console.log(`error add: `, error);
       }
+    },
+    async onDelete () {
+      if (!this.isEditMode) return
+      const variables = {
+        id: this.categoryEdit.id,
+      };
+      try {
+        await this.$apollo.mutate({
+          mutation: CATEGORIES_DELETE_MUTATION,
+          variables
+        })
+        this.modalVisible = false
+        this.categoryName = ""
+        this.categoryEdit = null
+        this.refetch()
+      } catch (error) {
+        console.log(`error add: `, error);
+      }
+    },
+    onUpdateStart (cat) {
+      this.categoryEdit = cat
+      this.categoryName = cat.name
+      this.modalVisible = true
     },
     refetch() {
       this.$apollo.queries.categories && this.$apollo.queries.categories.refetch()
@@ -133,6 +169,10 @@ export default {
     bottom: 40px;
     right: 20px;
     font-size: 36px;
+  }
+  &__footer {
+    display: flex;
+    column-gap: 20px;
   }
 }
 </style>

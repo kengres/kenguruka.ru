@@ -6,12 +6,14 @@ export const DEPENSES_ADD_MUTATION = gql`
     $notes: String
     $amount: Int
     $currencyId: ID!
+    $categoryId: ID!
   ) {
     createDepense(
       name: $name
       amount: $amount
       notes: $notes
       currencyId: $currencyId
+      categoryId: $categoryId
     ) {
       id
       name

@@ -1,7 +1,7 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
 import LayoutDefault from '../layouts/Default'
-import Home from '../pages/Home.vue'
+import Home from '../pages'
 import Currencies from '../pages/Currencies.vue'
 import Categories from '../pages/categories'
 

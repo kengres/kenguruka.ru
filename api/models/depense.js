@@ -23,7 +23,11 @@ const _schema = new Schema(
     },
     currency: {
       type: Schema.Types.ObjectId,
-      ref: "Currency",
+      ref: MODEL_NAMES.currency,
+    },
+    category: {
+      type: Schema.Types.ObjectId,
+      ref: MODEL_NAMES.category,
     },
     createdBy: {
       type: Schema.Types.ObjectId,

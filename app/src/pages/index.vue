@@ -14,6 +14,7 @@
             <depenses-item
               :title="dep.name"
               :amount="moneyFilterVal(dep.amount)"
+              :category-name="dep.category && dep.category.name"
               :date="dep.createdAt"
               :delete="() => onDelete(dep)"
             />
