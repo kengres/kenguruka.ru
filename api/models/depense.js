@@ -19,7 +19,7 @@ const _schema = new Schema(
     },
     date: {
       type: String,
-      default: String(Date.now),
+      default: Date.now,
     },
     currency: {
       type: Schema.Types.ObjectId,

@@ -8,6 +8,10 @@ const dateToString = date => {
   return new Date(date).toISOString();
 };
 
+const isValidDate = date => {
+  // const d = new Date(date)
+  return new Date(date).getTime() === new Date(date).getTime();
+}
 
 const isValidObjectId = id => {
   return ObjectId.isValid(id) && (new ObjectId(id)).equals(id);
@@ -21,6 +25,16 @@ module.exports = {
   },
   updatedAt: (parent, input, ctx) => {
     return dateToString(parent.updatedAt)
+  },
+  date: (parent, input, ctx) => {
+    // console.log(`===============`)
+    // console.log(`parent.date`, parent.date)
+    // console.log(`typeof parent.date`, typeof parent.date)
+    if (isValidDate(parent.date)) {
+      // console.log(`is valid date...`)
+      return dateToString(parent.date);
+    }
+    return dateToString(parent.createdAt)
   },
   createdBy: async (_parent, _input, { currentUser }) => {
     // if (!currentUser) return null

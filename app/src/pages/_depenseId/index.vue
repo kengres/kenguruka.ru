@@ -8,7 +8,7 @@
       <div class="dep-id__name">{{ depense.name }}</div>
       <div class="dep-id__item">
         <div class="dep-id__label">prix</div>
-        <div class="dep-id__detail is-price">{{ depense.amount | amountFilter }} <span class="dep-id__curr">Fbu</span></div>
+        <div class="dep-id__detail is-price">{{ depense.amount | amountFilter }} <span class="dep-id__curr" v-if="depense.currency">{{ depense.currency.abbreviation }}</span></div>
       </div>
       <div class="dep-id__item" v-if="depense.category">
         <div class="dep-id__label">category</div>

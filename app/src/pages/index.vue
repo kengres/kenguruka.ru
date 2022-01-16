@@ -15,7 +15,7 @@
               :title="dep.name"
               :amount="moneyFilterVal(dep.amount)"
               :category-name="dep.category && dep.category.name"
-              :date="dateFilterVal(dep.createdAt)"
+              :date="dateFilterVal(dep.date)"
             />
           </li>
         </ul>

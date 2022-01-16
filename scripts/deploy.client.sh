@@ -1,6 +1,6 @@
 #!/bin/bash
 cd app
-# yarn build
+yarn build
 tar czf app.kenguruka.tar.gz dist
 scp -r app.kenguruka.tar.gz kengres@217.25.93.162:~
 rm app.kenguruka.tar.gz

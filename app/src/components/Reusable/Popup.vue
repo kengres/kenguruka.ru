@@ -48,8 +48,8 @@ export default {
 
   &__inner {
     background-color: #fff;
-    max-width: 400px;
-    width: 95%;
+    max-width: 100vw;
+    width: 100vw;
     margin: 0 auto;
     border-radius: 14px 14px 0 0;
     box-shadow: 2px 2px 6px 1px rgba(0, 0, 0, 0.15);

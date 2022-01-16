@@ -6,6 +6,7 @@ export const DEPENSES_QUERY = gql`
       id
       name
       amount
+      date
       category {
         id
         name
@@ -23,26 +24,27 @@ export const DEPENSES_QUERY = gql`
 `;
 
 export const SINGLE_DEPENSE_QUERY = gql`
-  query Depense($id: ID!) {
-    depense(id: $id) {
-      id
-      name
-      amount
-      category {
-        id
-        name
-      }
-      currency {
-        id
-        name
-        abbreviation
-      }
-      displayedAmount
-      createdAt
-      updatedAt
-    }
-  }
-`;
+         query Depense($id: ID!) {
+           depense(id: $id) {
+             id
+             name
+             amount
+             date
+             category {
+               id
+               name
+             }
+             currency {
+               id
+               name
+               abbreviation
+             }
+             displayedAmount
+             createdAt
+             updatedAt
+           }
+         }
+       `;
 
 export const DEPENSES_ADD_MUTATION = gql`
   mutation createDepense(
@@ -51,6 +53,7 @@ export const DEPENSES_ADD_MUTATION = gql`
     $amount: Int
     $currencyId: ID!
     $categoryId: ID!
+    $date: String
   ) {
     createDepense(
       name: $name
@@ -58,10 +61,12 @@ export const DEPENSES_ADD_MUTATION = gql`
       notes: $notes
       currencyId: $currencyId
       categoryId: $categoryId
+      date: $date
     ) {
       id
       name
       amount
+      date
       displayedAmount
       createdAt
       updatedAt
@@ -78,6 +83,7 @@ export const DEPENSES_UPDATE_MUTATION = gql`
     $amount: Int
     $currencyId: ID
     $categoryId: ID
+    $date: String
   ) {
     updateDepense(
       id: $id
@@ -86,10 +92,12 @@ export const DEPENSES_UPDATE_MUTATION = gql`
       notes: $notes
       currencyId: $currencyId
       categoryId: $categoryId
+      date: $date
     ) {
       id
       name
       amount
+      date
       displayedAmount
       createdAt
       updatedAt

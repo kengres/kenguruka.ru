@@ -6,7 +6,7 @@ const { UserInputError, ForbiddenError } = require('apollo-server-express');
 
 module.exports = {
   createDepense: async (_p, input) => {
-    const { name, notes, amount = 1, currencyId, categoryId } = input;
+    const { name, notes, amount = 1, currencyId, categoryId, date } = input;
     console.log(`categoryId`, categoryId)
     if (!name || !currencyId) {
       throw new UserInputError('Invalid Data! name, currency: required!')
@@ -29,6 +29,10 @@ module.exports = {
         category: category && category.id,
       });
 
+      if (date) {
+        newItem.date = new Date(date);
+      }
+
       await newItem.save()
       return newItem
     } catch (error) {
@@ -37,7 +41,7 @@ module.exports = {
     }
   },
   updateDepense: async (_p, input) => {
-    const { id, name, notes, amount, currencyId, categoryId } = input;
+    const { id, name, notes, amount, currencyId, categoryId, date } = input;
     if (!id) {
       throw new UserInputError('Invalid Data! id is required!')
     }
@@ -64,6 +68,9 @@ module.exports = {
           item[key] = value
         }
       })
+      if (date) {
+        item.date = new Date(date);
+      }
       return await item.save()
     } catch (error) {
       console.log('error create One:', error)

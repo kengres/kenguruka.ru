@@ -12,6 +12,9 @@
     <div class="depenses-add__item">
       <my-select :options="currencies" v-model="form.currency" label="abbreviation" />
     </div>
+    <div class="depenses-add__item">
+      <input type="datetime-local" min="2021-10-01T00:00" :max="`${thisYear}-12-31T00:00`" v-model="form.date" />
+    </div>
   </div>
 </template>
 
@@ -21,6 +24,7 @@ import MySelect from "@/components/Reusable/Select";
 import { CURRENCIES_QUERY } from '@/graphql/currencies';
 import { CATEGORIES_QUERY } from '@/graphql/categories';
 import { DEPENSES_UPDATE_MUTATION, DEPENSES_ADD_MUTATION } from '@/graphql/depenses';
+import { formtDateToLocal } from '@/utils/utils'
 
 export default {
   name: "DepensesAdd",
@@ -41,9 +45,11 @@ export default {
         amount: 0,
         currency: "",
         category: "",
+        date: formtDateToLocal(new Date()),
       },
       currencies: [],
       categories: [],
+      thisYear: new Date().getFullYear()
     };
   },
   apollo: {
@@ -77,14 +83,16 @@ export default {
         this.form.amount = this.depenseEdit.amount;
         this.form.currency = this.depenseEdit.currency;
         this.form.category = this.depenseEdit.category;
+        this.form.date = formtDateToLocal(this.depenseEdit.date);
       }
     },
     async onSubmit() {
       const variables = {
         name: this.form.name,
+        amount: +this.form.amount,
         currencyId: this.form.currency && this.form.currency.id,
         categoryId: this.form.category && this.form.category.id,
-        amount: +this.form.amount,
+        date: this.form.date,
       };
       if (this.isEditMode) {
         variables.id = this.depenseEdit.id;
