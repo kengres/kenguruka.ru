@@ -18,10 +18,9 @@
 <script>
 import MyInput from "@/components/Reusable/Input";
 import MySelect from "@/components/Reusable/Select";
-import { CURRENCIES_QUERY } from '@/graphql/queries';
+import { CURRENCIES_QUERY } from '@/graphql/currencies';
 import { CATEGORIES_QUERY } from '@/graphql/categories';
-import { DEPENSES_ADD_MUTATION } from '@/graphql/mutations';
-import { DEPENSES_UPDATE_MUTATION } from '@/graphql/depenses';
+import { DEPENSES_UPDATE_MUTATION, DEPENSES_ADD_MUTATION } from '@/graphql/depenses';
 
 export default {
   name: "DepensesAdd",
@@ -48,7 +47,15 @@ export default {
     };
   },
   apollo: {
-    currencies: CURRENCIES_QUERY,
+    currencies: {
+      query: CURRENCIES_QUERY,
+      update (data) {
+        if (data.currencies) {
+          this.form.currency = data.currencies[0]
+        }
+        return data.currencies
+      }
+    },
     categories: CATEGORIES_QUERY,
   },
   computed: {

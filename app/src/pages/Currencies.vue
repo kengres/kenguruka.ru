@@ -11,7 +11,7 @@
 </template>
 
 <script>
-import { CURRENCIES_QUERY } from '@/graphql/queries';
+import { CURRENCIES_QUERY } from '@/graphql/currencies';
 export default {
   name: "Currencies",
   data () {

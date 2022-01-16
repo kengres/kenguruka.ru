@@ -22,6 +22,54 @@ export const DEPENSES_QUERY = gql`
   }
 `;
 
+export const SINGLE_DEPENSE_QUERY = gql`
+  query Depense($id: ID!) {
+    depense(id: $id) {
+      id
+      name
+      amount
+      category {
+        id
+        name
+      }
+      currency {
+        id
+        name
+        abbreviation
+      }
+      displayedAmount
+      createdAt
+      updatedAt
+    }
+  }
+`;
+
+export const DEPENSES_ADD_MUTATION = gql`
+  mutation createDepense(
+    $name: String!
+    $notes: String
+    $amount: Int
+    $currencyId: ID!
+    $categoryId: ID!
+  ) {
+    createDepense(
+      name: $name
+      amount: $amount
+      notes: $notes
+      currencyId: $currencyId
+      categoryId: $categoryId
+    ) {
+      id
+      name
+      amount
+      displayedAmount
+      createdAt
+      updatedAt
+    }
+  }
+`;
+
+
 export const DEPENSES_UPDATE_MUTATION = gql`
   mutation UpdateDepense(
     $id: ID!
@@ -57,11 +105,6 @@ export const DEPENSES_DELETE_MUTATION = gql`
       id: $id
     ) {
       id
-      name
-      amount
-      displayedAmount
-      createdAt
-      updatedAt
     }
   }
 `;

@@ -10,13 +10,12 @@
           <div class="depenses__amount">{{ total | amountFilter }}</div>
         </div>
         <ul class="depenses__list">
-          <li class="depenses__item" v-for="(dep, i) in depenses" :key="i" @click="onBeforeEdit(dep)">
+          <li class="depenses__item" v-for="(dep, i) in depenses" :key="i" @click="handlePopup(dep)">
             <depenses-item
               :title="dep.name"
               :amount="moneyFilterVal(dep.amount)"
               :category-name="dep.category && dep.category.name"
               :date="dateFilterVal(dep.createdAt)"
-              :delete="() => onDelete(dep)"
             />
           </li>
         </ul>
@@ -32,12 +31,16 @@
         <yotta-button type="success" @click="onSubmit">submit</yotta-button>
       </template>
     </modal>
+    <gk-popup :visible="popVisible" @close="popVisible = false">
+      <div class="depenses__action-item" @click="handleOpen">Open</div>
+      <div class="depenses__action-item" @click="handleEdit">Edit</div>
+      <div class="depenses__action-item" @click="handleDelete">Delete</div>
+    </gk-popup>
   </div>
 </template>
 
 <script>
-import { DEPENSES_QUERY } from "@/graphql/depenses";
-import { DEPENSES_DELETE_MUTATION } from "@/graphql/mutations";
+import { DEPENSES_QUERY, DEPENSES_DELETE_MUTATION } from "@/graphql/depenses";
 import GkContainer from '@/components/Reusable/GkContainer.vue';
 import DepensesItem from '@/components/Depenses/DepensesItem.vue';
 import Modal from '@/components/Reusable/Modal.vue';
@@ -45,6 +48,7 @@ import DepensesAdd from '@/components/Depenses/DepensesAdd.vue';
 import YottaButton from '@/components/Reusable/Button'
 import { moneyFilter, dateTimeFilter } from '@/utils/filters'
 import AddButton from '../components/Reusable/AddButton.vue';
+import GkPopup from '../components/Reusable/Popup.vue';
 export default {
   components: {
     GkContainer,
@@ -52,7 +56,8 @@ export default {
     Modal,
     DepensesAdd,
     YottaButton,
-    AddButton, 
+    AddButton,
+    GkPopup, 
   },
   name: 'Home',
   filters: {
@@ -68,6 +73,7 @@ export default {
       modalVisible: false,
       depenses: [],
       depenseEdit: null,
+      popVisible: false,
     }
   },
   apollo: {
@@ -93,6 +99,9 @@ export default {
       return val => {
         return dateTimeFilter(val)
       }
+    },
+    isEditMode () {
+      return !!this.depenseEdit && !!this.depenseEdit.id
     }
   },
   methods: {
@@ -107,6 +116,16 @@ export default {
       this.updateData();
       this.modalVisible = false;
       this.depenseEdit = null;
+      this.popVisible = false;
+    },
+    handlePopup (depense) {
+      this.depenseEdit = depense
+      this.popVisible = true
+    },
+    handleDelete() {
+      if (!this.isEditMode) return
+      // todo: confirm popup
+      this.onDelete(this.depenseEdit)
     },
     async onDelete(item) {
       console.log(`on delet: `, item)
@@ -117,20 +136,26 @@ export default {
             id: item.id,
           }
         })
-        this.updateData()
+        this.onAfterSubmit()
       } catch (error) {
         console.log(`delete error: `, error)
       }
-    },
-    onBeforeEdit (depense) {
-      this.depenseEdit = depense
-      this.modalVisible = true
     },
     updateData () {
       if (this.$apollo.queries.depenses) {
         this.$apollo.queries.depenses.refetch()
       }
-    }
+    },
+    handleEdit() {
+      if (!this.isEditMode) return
+      this.modalVisible = true
+      this.popVisible = false
+    },
+    handleOpen() {
+      if (!this.isEditMode) return
+      this.popVisible = false
+      this.$router.push(`/depenses/${this.depenseEdit.id}`)
+    },
   },
 }
 </script>
@@ -174,6 +199,17 @@ export default {
     bottom: 40px;
     right: 20px;
     z-index: 100;
+  }
+  &__action-item {
+    padding: 16px 32px;
+    transition: 0.3s;
+    cursor: pointer;
+    &:nth-of-type(odd) {
+      background-color: #F5F5F5;
+    }
+    &:hover {
+      background-color: #ebebeb;
+    }
   }
 }
 </style>

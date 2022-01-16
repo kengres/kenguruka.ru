@@ -2,6 +2,7 @@ import Vue from 'vue'
 import VueRouter from 'vue-router'
 import LayoutDefault from '../layouts/Default'
 import Home from '../pages'
+import DepenseId from '../pages/_depenseId'
 import Currencies from '../pages/Currencies.vue'
 import Categories from '../pages/categories'
 
@@ -16,6 +17,11 @@ const routes = [
         path: "/",
         name: "Home",
         component: Home,
+      },
+      {
+        path: "/depenses/:id",
+        name: "DepenseId",
+        component: DepenseId,
       },
       {
         path: "/currencies",
