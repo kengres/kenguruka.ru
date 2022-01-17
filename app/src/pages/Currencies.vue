@@ -14,6 +14,9 @@
 import { CURRENCIES_QUERY } from '@/graphql/currencies';
 export default {
   name: "Currencies",
+  metaInfo: {
+    title: 'Currencies',
+  },
   data () {
     return {
       currencies: []

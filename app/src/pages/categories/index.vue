@@ -30,6 +30,9 @@ import MyInput from "@/components/Reusable/Input";
 import MyButton from "@/components/Reusable/Button";
 export default {
   name: "Categories",
+  metaInfo: {
+    title: 'Categories',
+  },
   components: {
     AddButton,
     Modal,
