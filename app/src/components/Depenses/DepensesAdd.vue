@@ -13,7 +13,7 @@
       <my-select :options="currencies" v-model="form.currency" label="abbreviation" />
     </div>
     <div class="depenses-add__item">
-      <input type="datetime-local" min="2021-10-01T00:00" :max="`${thisYear}-12-31T00:00`" v-model="form.date" />
+      <input class="depenses-add__datetime" type="datetime-local" min="2021-10-01T00:00" :max="`${thisYear}-12-31T00:00`" v-model="form.date" />
     </div>
   </div>
 </template>
@@ -117,6 +117,27 @@ export default {
   position: relative;
   &__item {
     margin-bottom: 1rem;
+  }
+  &__datetime {
+    background-color: transparent;
+    background-image: none;
+    appearance: none;
+    font-size: 14px;
+    font-family: inherit;
+    display: flex;
+    width: 100%;
+    padding: 0 14px;
+    border-radius: 4px;
+    border: 1px solid var(--color-primary);
+    color: #606266;
+    height: 40px;
+    left: 40px;
+    outline: none;
+    transition: border-color 0.3s;
+
+    &:hover, &:focus {
+      border-color: var(--color-primary--dark);
+    }
   }
 }
 </style>
