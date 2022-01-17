@@ -4,7 +4,7 @@
       v-bind="$attrs"
       class="input"
       :value="value"
-      @input="$emit('input', $event.target.value)"
+      @input="handleInput"
     />
   </div>
 </template>
@@ -21,6 +21,14 @@ export default {
     disabled: {
       type: Boolean,
       default: false,
+    },
+  },
+  methods: {
+    handleInput (event) {
+      // console.log(`$attrs`, this.$attrs)
+      const isTypeNumber = !!this.$attrs && !!this.$attrs.type && this.$attrs.type === 'number'
+      const val = event.target.value
+      this.$emit('input', isTypeNumber ? `${+val}` : val)
     },
   },
 }

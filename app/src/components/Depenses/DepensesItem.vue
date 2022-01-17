@@ -1,7 +1,7 @@
 <template functional>
   <div class="depense-item">
     <div class="depense-item__heading">
-      <div class="depense-item__title">{{ props.title }}</div>
+      <div class="depense-item__title">{{ $options.capitalizeFirstLetter(props.title) }}</div>
       <div class="depense-item__amount">{{ props.amount }}</div>
     </div>
     <div class="depense-item__footer">
@@ -41,6 +41,9 @@ export default {
       default: 0
     }
   },
+  capitalizeFirstLetter (val) {
+    return `${val.charAt(0).toUpperCase()}${val.slice(1)}`
+  }
 };
 </script>
 
@@ -60,7 +63,6 @@ export default {
     font-weight: 300;
   }
   &__title {
-    text-transform: capitalize;
     font-weight: 700;
   }
   &__footer {

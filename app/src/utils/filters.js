@@ -51,7 +51,7 @@ export const dateTimeFilter = (val) => {
   //   d.getMonth() + 1
   // )}.${d.getFullYear()}`;
 
-  let dateStr = `${MONTH_LIST[d.getMonth()].split(":")[0]} ${addLeadingZero(d.getDate())}`;
+  let dateStr = `${(MONTH_LIST[d.getMonth()] || ":").split(":")[0]} ${addLeadingZero(d.getDate())}`;
 
   if (!isDateThisYear(d)) {
     dateStr += `, ${d.getFullYear()}`;

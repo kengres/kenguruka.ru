@@ -88,7 +88,7 @@ export default {
     },
     async onSubmit() {
       const variables = {
-        name: this.form.name,
+        name: this.form.name && this.form.name.trim(),
         amount: +this.form.amount,
         currencyId: this.form.currency && this.form.currency.id,
         categoryId: this.form.category && this.form.category.id,

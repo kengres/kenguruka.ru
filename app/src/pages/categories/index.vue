@@ -56,7 +56,7 @@ export default {
   methods: {
     async onSubmit () {
       const variables = {
-        name: this.categoryName,
+        name: this.categoryName && this.categoryName.trim(),
       };
       if (this.isEditMode) {
         variables.id = this.categoryEdit.id;

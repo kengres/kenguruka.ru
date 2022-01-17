@@ -28,7 +28,7 @@
     <modal :visible="modalVisible" @close="modalVisible = false">
       <depenses-add ref="add" @close="onAfterSubmit" :depense-edit="depenseEdit" />
       <template v-slot:footer>
-        <yotta-button type="success" @click="onSubmit">submit</yotta-button>
+        <yotta-button type="success" @click="onSubmit">Submit</yotta-button>
       </template>
     </modal>
     <gk-popup :visible="popVisible" @close="popVisible = false">
