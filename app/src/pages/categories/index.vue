@@ -110,6 +110,7 @@ export default {
 
 <style lang="scss" scoped>
 .categories {
+  padding-bottom: 100px;
   &__title {
     text-align: center;
     padding: 10px;

@@ -1,17 +1,4 @@
-const MONTH_LIST = [
-  "Jan:January",
-  "Feb:February",
-  "Mar:March",
-  "Apr:April",
-  "May:May",
-  "Jun:June",
-  "Jul:July",
-  "Aug:August",
-  "Sep:September",
-  "Oct:October",
-  "Nov:November",
-  "Dec:December",
-]
+import { MONTH_LIST } from './constants'
 
 export const addLeadingZero = (val) => (val < 10 ? `0${val}` : val);
 
@@ -29,7 +16,7 @@ const isDateThisYear = (val) => {
 };
 
 export const moneyFilter = (val) => {
-  if (!val) return "";
+  if (!val) return 0;
   return `${val}`
     .split("")
     .reverse()

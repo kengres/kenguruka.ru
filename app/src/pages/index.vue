@@ -6,10 +6,31 @@
           <span class="depenses__title">Depenses</span>
         </h1>
         <div class="depenses__total">
-          <h2 class="depenses__subtitle">Total</h2>
-          <div class="depenses__amount">{{ total | amountFilter }}</div>
+          <swiper :options="swiperOptions" ref="mySwiper" @slideChange="handleSlideChange">
+            <template v-for="(item, i) in monthsAfterOct2021">
+              <swiper-slide :key="i">
+                <h2 class="depenses__subtitle">{{ getCurrentMonth(item)}}</h2>
+                <div class="depenses__amount" :class="{'is-loading': $apollo.loading}">{{ total | amountFilter }}</div>
+              </swiper-slide>
+            </template>
+            <div class="swiper-button-prev" slot="button-prev">
+              <yotta-button icon circle type="primary">
+                <yotta-icon name="arrow_back" />
+              </yotta-button>
+            </div>
+            <div class="swiper-button-next" slot="button-next">
+              <yotta-button icon circle type="primary">
+                <yotta-icon name="arrow_forward" />
+              </yotta-button>
+            </div>
+          </swiper>
         </div>
         <ul class="depenses__list">
+          <li class="depenses__empty" v-if="!$apollo.loading && depenses.length === 0">
+            <div class="depenses__empty-inner">
+              No data available for that period!
+            </div>
+          </li>
           <li class="depenses__item" v-for="(dep, i) in depenses" :key="i" @click="handlePopup(dep)">
             <depenses-item
               :title="dep.name"
@@ -21,7 +42,9 @@
         </ul>
       </section>
       <div class="depenses__add">
-        <add-button @click="onAdd" />
+        <yotta-button @click="onAdd" type="primary" icon circle>
+          <yotta-icon name="add_circle" />
+        </yotta-button>
       </div>
     </gk-container>
 
@@ -40,19 +63,26 @@
 </template>
 
 <script>
+import 'swiper/css/swiper.css'
 import { DEPENSES_QUERY, DEPENSES_DELETE_MUTATION } from "@/graphql/depenses";
 import GkContainer from '@/components/Reusable/GkContainer.vue';
 import DepensesItem from '@/components/Depenses/DepensesItem.vue';
 import Modal from '@/components/Reusable/Modal.vue';
 import DepensesAdd from '@/components/Depenses/DepensesAdd.vue';
 import YottaButton from '@/components/Reusable/Button'
+import YottaIcon from '@/components/Reusable/Icon'
 import { moneyFilter, dateTimeFilter } from '@/utils/filters'
-import AddButton from '../components/Reusable/AddButton.vue';
+import { getMonthCount, getMonthFirstDay } from '@/utils/utils'
+import { MONTH_LIST } from '@/utils/constants'
 import GkPopup from '../components/Reusable/Popup.vue';
+import { Swiper, SwiperSlide, directive } from 'vue-awesome-swiper'
 export default {
   name: 'Home',
   metaInfo: {
     title: 'Home',
+  },
+  directives: {
+    swiper: directive,
   },
   components: {
     GkContainer,
@@ -60,8 +90,10 @@ export default {
     Modal,
     DepensesAdd,
     YottaButton,
-    AddButton,
-    GkPopup, 
+    YottaIcon,
+    GkPopup,
+    Swiper,
+    SwiperSlide,
   },
   filters: {
     amountFilter (val) {
@@ -73,19 +105,45 @@ export default {
   },
   data () {
     return {
+      loading: true,
       modalVisible: false,
       depenses: [],
       depenseEdit: null,
+      activeMonth: null,
       popVisible: false,
+      swiperOptions: {
+        loop: false,
+        navigation: {
+          nextEl: '.swiper-button-next',
+          prevEl: '.swiper-button-prev',
+        },
+      }
     }
   },
   apollo: {
-    depenses: DEPENSES_QUERY
+    depenses: {
+      query: DEPENSES_QUERY,
+      skip () {
+        return !this.activeMonth
+      },
+      variables () {
+        return { monthDate : this.activeMonth }
+      },
+    },
   },
   mounted () {
     document.body.classList.add("page");
+    this.swiper.slideTo(3, 1000, false)
   },
   computed: {
+    monthsAfterOct2021 () {
+      const count = getMonthCount("2021-11-01", new Date())
+      const arr = []
+      for (let i = 0; i < count; i++) {
+        arr.unshift(getMonthFirstDay(new Date().setMonth(-i)))
+      }
+      return arr
+    },
     total() {
       return this.depenses
         .map(i => i.amount)
@@ -105,12 +163,26 @@ export default {
     },
     isEditMode () {
       return !!this.depenseEdit && !!this.depenseEdit.id
+    },
+    swiper() {
+      return this.$refs.mySwiper.$swiper
+    },
+    getCurrentMonth () {
+      return (date) => {
+        return `${MONTH_LIST[new Date(date).getMonth()].split(":")[0]} ${new Date(date).getFullYear()}`
+      }
     }
   },
   methods: {
+    handleSlideChange() {
+      this.fetchMonthData(this.swiper.activeIndex)
+    },
+    fetchMonthData (index = 0) {
+      console.log(`fetch for ${index}`, this.monthsAfterOct2021[index])
+      this.activeMonth = this.monthsAfterOct2021[index]
+    },
     onAdd() {
       this.modalVisible = true;
-      console.log(`on add....`)
     },
     onSubmit() {
       this.$refs.add.onSubmit();
@@ -164,6 +236,9 @@ export default {
 </script>
 
 <style lang="scss">
+.is-loading {
+  color: transparent;
+}
 .depenses {
   width: 100%;
   padding-bottom: 100px;
@@ -171,6 +246,21 @@ export default {
     text-align: center;
     padding: 10px;
     margin-bottom: 12px;
+  }
+  .swiper-button-prev, .swiper-button-next {
+    width: auto;
+    right: 0;
+    top: 20px;
+    &::after {
+      display: none;
+    }
+  }
+  .swiper-button-prev {
+    left: 0;
+    right: auto;
+  }
+  .swiper-button-disabled {
+    display: none;
   }
   &__total {
     background-color: #08BE51;
@@ -212,6 +302,26 @@ export default {
     }
     &:hover {
       background-color: #ebebeb;
+    }
+  }
+  &__empty {
+    padding: 16px 10px;
+    &-inner {
+      color: var(--color-warning);
+      position: relative;
+      padding: 24px;
+      border-radius: 8px;
+      &::before {
+        content: "";
+        top: 0;
+        left: 0;
+        bottom: 0;
+        right: 0;
+        position: absolute;
+        background-color: currentColor;
+        opacity: 0.1;
+        border-radius: inherit;
+      }
     }
   }
 }

@@ -1,27 +1,27 @@
 import gql from 'graphql-tag';
 
 export const DEPENSES_QUERY = gql`
-  query Depenses {
-    depenses {
-      id
-      name
-      amount
-      date
-      category {
-        id
-        name
-      }
-      currency {
-        id
-        name
-        abbreviation
-      }
-      displayedAmount
-      createdAt
-      updatedAt
-    }
-  }
-`;
+         query Depenses($monthDate: String) {
+           depenses(monthDate: $monthDate) {
+             id
+             name
+             amount
+             date
+             category {
+               id
+               name
+             }
+             currency {
+               id
+               name
+               abbreviation
+             }
+             displayedAmount
+             createdAt
+             updatedAt
+           }
+         }
+       `;
 
 export const SINGLE_DEPENSE_QUERY = gql`
          query Depense($id: ID!) {

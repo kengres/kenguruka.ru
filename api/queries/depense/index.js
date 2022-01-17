@@ -1,29 +1,32 @@
 const Depense = require("../../models/depense");
-const addzero = val => val < 9 ? `0${val}` : val
+
+const getMonthFirstDay = (date) => {
+  const d = new Date(date);
+  const d1 = new Date(new Date(d.setDate(1)).setHours(0, -d.getTimezoneOffset(), 0, 0));
+  return d1.toISOString().slice(0, 10);
+};
+const getMonthLastDay = (date) => {
+  const d = new Date(date);
+  const d2 = new Date(d.getFullYear(), d.getMonth() + 1, 0).setHours(0, -d.getTimezoneOffset(), 0, 0);
+  return new Date(d2).toISOString().slice(0, 10);
+};
 
 module.exports = {
-  depenses: async (_p, { month, year }) => {
-    // console.log(`[DEPENSES] list`);
-    const d = new Date();
-    const monthFilter = month || d.getMonth();
-    console.log(`monthFilter`, monthFilter);
-    const yearFilter = year || d.getFullYear();
-    console.log(`yearFilter`, yearFilter);
-    // lte: 2022-02-01 - gte: 2022-01-01
-    console.log(
-      `entre ${yearFilter}-${addzero(monthFilter + 1)}-01 et `,
-      `${yearFilter}-${addzero(monthFilter + 2)}-01`
-    );
+  depenses: async (_p, { monthDate = new Date() }) => {
+    // todo: Invalid dates
+    const d = new Date(monthDate);
+    const monthFilter = d.getMonth();
+    const yearFilter = d.getFullYear();
+    
     const filters = {
       date: {
-        $gte: `${yearFilter}-${addzero(monthFilter + 1)}-01`,
-        // todo: IF it's december
-        $lte: `${yearFilter}-${addzero(monthFilter + 2)}-01`,
+        $gte: `${getMonthFirstDay(new Date(yearFilter, monthFilter, 1))}`,
+        $lte: `${getMonthLastDay(new Date(yearFilter, monthFilter, 1))}`,
       },
     };
 
     try {
-      const result = await Depense.find(/* filters */).sort("-date");
+      const result = await Depense.find(filters).sort("-date");
       // console.log(`result: `, result)
       return result;
     } catch (e) {

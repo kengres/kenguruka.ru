@@ -51,7 +51,7 @@ module.exports = gql`
     # users: [User!]!
     # user(id: ID!): User
     # DEPENSES
-    depenses(month: Int, year: Int): [Depense!]!
+    depenses(monthDate: String): [Depense!]!
     depense(id: ID!): Depense
     # CURRENCIES
     currencies: [Currency!]!
@@ -71,14 +71,7 @@ module.exports = gql`
     # logUserIn(email: String! password: String!): AuthData!
     # refreshTokens(token: String! refreshToken: String!): AuthData!
     # DEPENSES
-    createDepense(
-      name: String!
-      notes: String
-      amount: Int
-      currencyId: ID!
-      categoryId: ID
-      date: String
-    ): Depense
+    createDepense(name: String!, notes: String, amount: Int, currencyId: ID!, categoryId: ID, date: String): Depense
     updateDepense(
       id: ID!
       name: String
