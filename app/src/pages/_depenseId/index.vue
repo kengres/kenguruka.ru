@@ -28,6 +28,9 @@ import { moneyFilter, dateTimeFilter } from '@/utils/filters'
 
 export default {
   name: 'DepenseDetails',
+  metaInfo: {
+    title: 'Details Depense',
+  },
   filters: {
     amountFilter (val) {
       return moneyFilter(val)

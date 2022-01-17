@@ -50,6 +50,10 @@ import { moneyFilter, dateTimeFilter } from '@/utils/filters'
 import AddButton from '../components/Reusable/AddButton.vue';
 import GkPopup from '../components/Reusable/Popup.vue';
 export default {
+  name: 'Home',
+  metaInfo: {
+    title: 'Home',
+  },
   components: {
     GkContainer,
     DepensesItem,
@@ -59,7 +63,6 @@ export default {
     AddButton,
     GkPopup, 
   },
-  name: 'Home',
   filters: {
     amountFilter (val) {
       return moneyFilter(val)
