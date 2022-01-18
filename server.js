@@ -33,7 +33,13 @@ server.applyMiddleware({ app, apiPath });
 
 mongoose.set('useFindAndModify', false);
 
-mongoose.connect(process.env.MONGO_URL, { useNewUrlParser: true, useUnifiedTopology: true })
+const mongooseOptions = {
+  useCreateIndex: true,
+  useNewUrlParser: true,
+  useUnifiedTopology: true,
+};
+
+mongoose.connect(process.env.MONGO_URL, mongooseOptions)
   .then(async () => {
     app.listen(PORT, () => {
       console.log(`🚀 Server ready at http://localhost:${PORT}${server.graphqlPath}`)
