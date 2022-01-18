@@ -1,0 +1,20 @@
+/* #region */
+// TEXT TRANSFORM
+.tt {
+  &-c {
+    text-transform: capitalize;
+  }
+}
+/* #endregion */
+
+/* #region */
+// FONT SIZE
+.fz {
+  &-14 {
+    font-size: 14px;
+  }
+  &-16 {
+    font-size: 16px;
+  }
+}
+/* #endregion */

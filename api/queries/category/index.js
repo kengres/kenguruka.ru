@@ -14,6 +14,7 @@ module.exports = {
     }
   },
   category: async (_p, { id }) => {
+    // console.log(`category query, id: ${id}`);
     let filters = { _id: id }
     try {
       const category = await Category.findOne(filters)

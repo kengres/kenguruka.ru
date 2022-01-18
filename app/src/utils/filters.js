@@ -8,6 +8,13 @@ const isDateToday = (val) => {
     new Date(val).setHours(0, 0, 0, 0) === new Date().setHours(0, 0, 0, 0)
   );
 };
+const isDateYesterday = (val) => {
+  return (
+    !!val &&
+    new Date(val).setHours(0, 0, 0, 0) === new Date().setHours(-24, 0, 0, 0)
+  );
+};
+
 const isDateThisYear = (val) => {
   return (
     !!val &&
@@ -33,6 +40,9 @@ export const dateTimeFilter = (val) => {
   const d = new Date(val);
   if (isDateToday(d)) {
     return `Today ${addLeadingZero(d.getHours())}:${addLeadingZero(d.getMinutes())}`;
+  }
+  if (isDateYesterday(d)) {
+    return `Yesterday ${addLeadingZero(d.getHours())}:${addLeadingZero(d.getMinutes())}`;
   }
   // return `${addLeadingZero(d.getDate())}.${addLeadingZero(
   //   d.getMonth() + 1

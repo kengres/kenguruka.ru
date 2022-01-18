@@ -2,14 +2,22 @@
   <div class="home">
     <gk-container>
       <section class="depenses">
-        <h1 class="depenses__heading">
+        <h1 :class="['depenses__heading', {'is-centered': !activeCategory}]">
+          <div class="depenses__back" v-if="activeCategory">
+            <yotta-button icon circle type="primary" @click="$router.push('/')">
+              <yotta-icon name="arrow_back" />
+            </yotta-button>
+          </div>
           <span class="depenses__title">Depenses</span>
         </h1>
         <div class="depenses__total">
           <swiper :options="swiperOptions" ref="mySwiper" @slideChange="handleSlideChange">
             <template v-for="(item, i) in monthsAfterOct2021">
               <swiper-slide :key="i">
-                <h2 class="depenses__subtitle">{{ getCurrentMonth(item)}}</h2>
+                <h2 class="depenses__subtitle">
+                  <span v-if="activeCategory" class="tt-c">{{ activeCategory.name }} &nbsp;</span>
+                  <span :class="{'fz-16': !!activeCategory}">{{ getCurrentMonth(item)}}</span>
+                </h2>
                 <div class="depenses__amount" :class="{'is-loading': $apollo.loading}">{{ total | amountFilter }}</div>
               </swiper-slide>
             </template>
@@ -37,6 +45,7 @@
               :amount="moneyFilterVal(dep.amount)"
               :category-name="dep.category && dep.category.name"
               :date="dateFilterVal(dep.date)"
+              :on-category="() => handleCategory(dep)"
             />
           </li>
         </ul>
@@ -65,6 +74,7 @@
 <script>
 import 'swiper/css/swiper.css'
 import { DEPENSES_QUERY, DEPENSES_DELETE_MUTATION } from "@/graphql/depenses";
+import { SINGLE_CATEGORY_QUERY } from "@/graphql/categories";
 import GkContainer from '@/components/Reusable/GkContainer.vue';
 import DepensesItem from '@/components/Depenses/DepensesItem.vue';
 import Modal from '@/components/Reusable/Modal.vue';
@@ -75,14 +85,11 @@ import { moneyFilter, dateTimeFilter } from '@/utils/filters'
 import { getMonthCount, getMonthFirstDay } from '@/utils/utils'
 import { MONTH_LIST } from '@/utils/constants'
 import GkPopup from '../components/Reusable/Popup.vue';
-import { Swiper, SwiperSlide, directive } from 'vue-awesome-swiper'
+import { Swiper, SwiperSlide } from 'vue-awesome-swiper'
 export default {
   name: 'Home',
   metaInfo: {
     title: 'Home',
-  },
-  directives: {
-    swiper: directive,
   },
   components: {
     GkContainer,
@@ -109,6 +116,7 @@ export default {
       modalVisible: false,
       depenses: [],
       depenseEdit: null,
+      activeCategory: null,
       activeMonth: null,
       popVisible: false,
       swiperOptions: {
@@ -127,13 +135,28 @@ export default {
         return !this.activeMonth
       },
       variables () {
-        return { monthDate : this.activeMonth }
+        return {
+          monthDate : this.activeMonth,
+          categoryId : this.$route.query.categoryId,
+        }
       },
+    },
+    activeCategory: {
+      query: SINGLE_CATEGORY_QUERY,
+      skip () {
+        return !this.$route.query.categoryId
+      },
+      variables () {
+        return { id: this.$route.query.categoryId }
+      },
+      update (data) {
+        return data.category
+      }
     },
   },
   mounted () {
     document.body.classList.add("page");
-    this.swiper.slideTo(3, 1000, false)
+    this.swiper.slideTo(3, 10, false)
   },
   computed: {
     monthsAfterOct2021 () {
@@ -169,16 +192,22 @@ export default {
     },
     getCurrentMonth () {
       return (date) => {
-        return `${MONTH_LIST[new Date(date).getMonth()].split(":")[0]} ${new Date(date).getFullYear()}`
+        const val = `${MONTH_LIST[new Date(date).getMonth()].split(":")[0]} ${new Date(date).getFullYear()}`
+        return this.activeCategory ? `(${val})` : val
       }
-    }
+    },
+  },
+  watch: {
+    '$route.query.categoryId': 'onCategoryIdChange'
   },
   methods: {
+    onCategoryIdChange(val) {
+      if (!val) this.activeCategory = null
+    },
     handleSlideChange() {
       this.fetchMonthData(this.swiper.activeIndex)
     },
     fetchMonthData (index = 0) {
-      console.log(`fetch for ${index}`, this.monthsAfterOct2021[index])
       this.activeMonth = this.monthsAfterOct2021[index]
     },
     onAdd() {
@@ -231,6 +260,10 @@ export default {
       this.popVisible = false
       this.$router.push(`/depenses/${this.depenseEdit.id}`)
     },
+    handleCategory(dep) {
+      if (!dep.category) return
+      this.$router.push(`/?categoryId=${dep.category.id}`)
+    },
   },
 }
 </script>
@@ -243,9 +276,15 @@ export default {
   width: 100%;
   padding-bottom: 100px;
   &__heading {
-    text-align: center;
+    display: flex;
+    align-items: center;
+    column-gap: 16px;
     padding: 10px;
     margin-bottom: 12px;
+
+    &.is-centered {
+      justify-content: center;
+    }
   }
   .swiper-button-prev, .swiper-button-next {
     width: auto;

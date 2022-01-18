@@ -1,4 +1,5 @@
 const Depense = require("../../models/depense");
+const Category = require("../../models/category");
 
 const getMonthFirstDay = (date) => {
   const d = new Date(date);
@@ -12,18 +13,27 @@ const getMonthLastDay = (date) => {
 };
 
 module.exports = {
-  depenses: async (_p, { monthDate = new Date() }) => {
+  depenses: async (_p, { monthDate = new Date(), categoryId }) => {
+    // console.log(`depense query: for ${monthDate} in ${categoryId}`);
     // todo: Invalid dates
     const d = new Date(monthDate);
     const monthFilter = d.getMonth();
     const yearFilter = d.getFullYear();
-    
+
     const filters = {
       date: {
         $gte: `${getMonthFirstDay(new Date(yearFilter, monthFilter, 1))}`,
         $lte: `${getMonthLastDay(new Date(yearFilter, monthFilter, 1))}`,
       },
     };
+
+    if (categoryId) {
+      // console.log(`categoryId`, categoryId)
+      const cat = await Category.findById(categoryId)
+      if (cat) {
+        filters.category = cat.id
+      }
+    }
 
     try {
       const result = await Depense.find(filters).sort("-date");
@@ -35,12 +45,12 @@ module.exports = {
     }
   },
   depense: async (_p, { id }) => {
-    let filters = { _id: id }
+    let filters = { _id: id };
     try {
-      const depense = await Depense.findOne(filters)
-      return depense
+      const depense = await Depense.findOne(filters);
+      return depense;
     } catch (error) {
-      throw (error);
+      throw error;
     }
   },
-}
+};

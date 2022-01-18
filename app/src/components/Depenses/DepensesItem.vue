@@ -6,7 +6,7 @@
     </div>
     <div class="depense-item__footer">
       <div class="depense-item__date">{{ props.date }}</div>
-      <div class="depense-item__category" v-if="props.categoryName">{{ props.categoryName }}</div>
+      <div class="depense-item__category" v-if="props.categoryName" @click.stop="props.onCategory">{{ props.categoryName }}</div>
     </div>
     <div class="depense-item__price">
       <span class="depense-item__currency" v-show="props.currency">{{
@@ -35,6 +35,10 @@ export default {
     categoryName: {
       type: String,
       default: ""
+    },
+    onCategory: {
+      type: Function,
+      default: () => {}
     },
     amount: {
       type: [Number, String],
@@ -74,8 +78,13 @@ export default {
     color: #BEBEBE;
   }
   &__category {
-    color: #08BE51;
+    color: #FFA631;
     text-transform: capitalize;
+    cursor: pointer;
+    transition: 0.3s;
+    &:hover {
+      color: #a5640e;
+    }
   }
 }
 </style>

@@ -1,8 +1,8 @@
 import gql from 'graphql-tag';
 
 export const DEPENSES_QUERY = gql`
-         query Depenses($monthDate: String) {
-           depenses(monthDate: $monthDate) {
+         query Depenses($monthDate: String, $categoryId: ID) {
+           depenses(monthDate: $monthDate, categoryId: $categoryId) {
              id
              name
              amount
