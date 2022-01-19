@@ -14,7 +14,7 @@ module.exports = {
   },
   me: async (_p, _input, { currentUser, reqUrl }) => {
     // console.log(`[ME] reqUrl: `, reqUrl);
-    console.log(`[ME] currentUser: `, currentUser && currentUser.name);
+    // console.log(`[ME] currentUser: `, currentUser && currentUser.name);
     if (!currentUser) {
       // todo: if (!authorizedUrls.includes(reqUrl)) {
       //   throw new AuthenticationError("Unauthorized!");

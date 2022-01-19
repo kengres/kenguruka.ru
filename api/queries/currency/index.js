@@ -1,26 +1,32 @@
 const Currency = require("../../models/currency");
+const { ForbiddenError } = require("apollo-server-express");
 
 module.exports = {
-  currencies: async (_p, _i) => {
-    // console.log(`[CURRENCIES] list`);
-    let filters = {}
-    
+  currencies: async (_p, _i, { currentUser }) => {
+    if (!currentUser) {
+      throw new ForbiddenError("Unauthorized!");
+    }
+    let filters = {};
+
     try {
-      const result = await Currency.find(filters)
+      const result = await Currency.find(filters);
       // console.log(`result: `, result)
-      return result
+      return result;
     } catch (e) {
-      console.log(`e: `, e)
+      console.log(`e: `, e);
       throw e;
     }
   },
-  currency: async (_p, { id }) => {
-    let filters = { _id: id }
+  currency: async (_p, { id }, { currentUser }) => {
+    if (!currentUser) {
+      throw new ForbiddenError("Unauthorized!");
+    }
+    let filters = { _id: id, createdBy: currentUser.id };
     try {
-      const currency = await Currency.findOne(filters)
-      return currency
+      const currency = await Currency.findOne(filters);
+      return currency;
     } catch (error) {
-      throw (error);
+      throw error;
     }
   },
-}
+};

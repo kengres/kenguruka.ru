@@ -1,7 +1,8 @@
 const { UserInputError } = require('apollo-server-express');
 const { isValidPhone, isValidEmail, isValidPassword, transformPhone, isValidCode } = require('../../utils/utils');
 const User = require('../../models/user')
-const Depense = require('../../models/depense')
+const Category = require("../../models/category");
+const Currency = require("../../models/currency");
 const bcrypt = require('bcrypt');
 const jwt = require("jsonwebtoken");
 const { getUniqCode, sendEmail } = require('../../utils/sendgrid');
@@ -277,10 +278,23 @@ module.exports = {
   firtUser: async (__, ___, { currentUser }) => {
     if (!currentUser) return 'error'
     try {
-      await Depense.updateMany({}, {
-        createdBy: currentUser.id,
-        updatedBy: currentUser.id,
-      })
+      const pm = [
+        Category.updateMany(
+          {},
+          {
+            createdBy: currentUser.id,
+            updatedBy: currentUser.id,
+          }
+        ),
+        Currency.updateMany(
+          {},
+          {
+            createdBy: currentUser.id,
+            updatedBy: currentUser.id,
+          }
+        ),
+      ];
+      await Promise.all(pm)
       return 'ok'
     } catch (error) {
       throw error
