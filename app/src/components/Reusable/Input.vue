@@ -1,10 +1,11 @@
 <template>
-  <div :class="['ytt-input', { 'is-disabled': disabled, 'is-passport': passport, 'is-noedit': noEdit }]">
+  <div :class="['ytt-input', { 'is-disabled': disabled, 'is-passport': passport, 'is-code': code, 'is-noedit': noEdit }]">
     <input
       v-bind="$attrs"
+      v-on="inputListeners"
+      :disabled="disabled"
       class="input"
       :value="value"
-      @input="handleInput"
     />
   </div>
 </template>
@@ -30,13 +31,40 @@ export default {
       type: Boolean,
       default: false,
     },
+    code: {
+      type: Boolean,
+      default: false,
+    },
   },
-  methods: {
-    handleInput (event) {
-      // console.log(`$attrs`, this.$attrs)
+  computed: {
+     inputListeners () {
+      const vm = this
       const isTypeNumber = !!this.$attrs && !!this.$attrs.type && this.$attrs.type === 'number'
-      const val = event.target.value
-      this.$emit('input', isTypeNumber ? `${+val}` : val)
+      // `Object.assign` merges objects together to form a new object
+      return Object.assign(
+        {},
+        // We add all the listeners from the parent
+        this.$listeners,
+        // Then we can add custom listeners or override the
+        // behavior of some listeners.
+        {
+          // This ensures that the component works with v-model
+          input: function (event) {
+            if (vm.noEdit) return
+            const val = event.target.value
+            const val2 = isTypeNumber ? `${val}` : val
+            vm.$emit('input', val2)
+            vm.$emit('change', val2)
+          },
+          change: function (event) {
+            if (vm.noEdit) return
+            const val = event.target.value
+            const val2 = isTypeNumber ? `${val}` : val
+            vm.$emit('input', val2)
+            vm.$emit('change', val2)
+          },
+        }
+      )
     },
   },
 }
@@ -68,6 +96,11 @@ export default {
       &::placeholder {
         color: inherit;
       }
+    }
+  }
+  &.is-code {
+    .input {
+      height: 45px;
     }
   }
   &.is-noedit {

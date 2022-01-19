@@ -10,7 +10,7 @@
       <yotta-btn type="primary" passport @click="onLogin" :disabled="formDisabled">Login</yotta-btn>
     </div>
     <div class="login__item is-actions">
-      <yotta-btn type="primary" passport :style="signupStyles">Sign up</yotta-btn>
+      <yotta-btn type="primary" passport :style="signupStyles" @click="$router.push('/passport/signup')">or Sign up</yotta-btn>
     </div>
   </div>
 </template>

@@ -66,6 +66,17 @@ const routes = [
         path: "/passport/login",
         name: "PassportLogin",
         component: () => import(/* webpackChunkName: "about" */ "../pages/passport/login.vue"),
+        meta: {
+          title: "Login",
+        },
+      },
+      {
+        path: "/passport/signup",
+        name: "PassportSignup",
+        component: () => import(/* webpackChunkName: "about" */ "../pages/passport/signup.vue"),
+        meta: {
+          title: "Sign up",
+        },
       },
     ],
   },

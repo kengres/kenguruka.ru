@@ -132,17 +132,18 @@ export const SINGLE_USER_QUERY = gql`
 `;
 
 
-export const CREATE_USER_MUTATION = gql`
-  mutation CreateUser($name: String!, $email: String!, $password: String!, $active: Boolean!, $role: Int!) {
-    createUser(name: $name, email: $email, active: $active, role: $role, password: $password) {
-      id
-      active
-      email
-      name
-      verified
-      role
-      createdAt
-      updatedAt
+export const CREATE_ACCOUNT_MUTATION = gql`
+  mutation CreateAccount($name: String!, $username: String!, $password: String!) {
+    createAccount(name: $name, username: $username, password: $password)
+  }
+`;
+
+export const VERIFY_CODE_MUTATION = gql`
+  mutation VerifyCode($username: String!, $code: String!) {
+    verifyCode(username: $username, code: $code) {
+      userId
+      token
+      refreshToken
     }
   }
 `;
