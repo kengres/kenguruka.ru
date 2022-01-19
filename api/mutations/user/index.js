@@ -1,8 +1,6 @@
 const { UserInputError } = require('apollo-server-express');
 const { isValidPhone, isValidEmail, isValidPassword, transformPhone, isValidCode } = require('../../utils/utils');
 const User = require('../../models/user')
-const Category = require("../../models/category");
-const Currency = require("../../models/currency");
 const bcrypt = require('bcrypt');
 const jwt = require("jsonwebtoken");
 const { getUniqCode, sendEmail } = require('../../utils/sendgrid');
@@ -221,7 +219,7 @@ module.exports = {
 
     try {
       const user = await User.findOne({ username });
-      if (!user) {
+      if (!user || !user.verified) {
         throw new UserInputError("Invalid Email or Password!");
       }
       if (!user.active) {
@@ -275,29 +273,4 @@ module.exports = {
       throw error;
     }
   },
-  firtUser: async (__, ___, { currentUser }) => {
-    if (!currentUser) return 'error'
-    try {
-      const pm = [
-        Category.updateMany(
-          {},
-          {
-            createdBy: currentUser.id,
-            updatedBy: currentUser.id,
-          }
-        ),
-        Currency.updateMany(
-          {},
-          {
-            createdBy: currentUser.id,
-            updatedBy: currentUser.id,
-          }
-        ),
-      ];
-      await Promise.all(pm)
-      return 'ok'
-    } catch (error) {
-      throw error
-    }
-  }
 };

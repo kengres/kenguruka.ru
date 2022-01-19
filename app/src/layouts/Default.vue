@@ -32,10 +32,10 @@ export default {
     position: fixed;
     bottom: 0;
     right: 0;
+    min-width: 100%;
     left: 0;
     z-index: 99;
-    max-width: 400px;
-    margin: 0 auto;
+    max-width: 600px;
   }
 }
 </style>

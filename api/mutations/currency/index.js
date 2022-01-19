@@ -14,6 +14,8 @@ module.exports = {
       const newItem = new Currency({
         name,
         abbreviation,
+        createdBy: currentUser.id,
+        updatedBy: currentUser.id,
       });
       await newItem.save();
       return newItem;
