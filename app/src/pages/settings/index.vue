@@ -10,20 +10,20 @@
       <div class="settings__avatar is-success--text">
         <yotta-icon name="person" :size="60" />
       </div>
-      <div class="settings__items">
+      <div class="settings__items" v-if="me">
         <div class="settings__item">
           <div class="settings__form-item">
             <div class="settings__label">name:</div>
             <div class="settings__input">
-              <yotta-input passport value="Edgard Doukay Ndiho" no-edit />
+              <yotta-input passport :value="me.name || me.username" no-edit />
             </div>
           </div>
         </div>
         <div class="settings__item">
           <div class="settings__form-item">
-            <div class="settings__label">email:</div>
+            <div class="settings__label">{{ usernameTitle }}:</div>
             <div class="settings__input">
-              <yotta-input passport value="Edgard Doukay Ndiho" no-edit />
+              <yotta-input passport :value="me.username" no-edit />
             </div>
           </div>
         </div>
@@ -35,6 +35,9 @@
             </div>
           </div>
         </div>
+        <div class="settings__item is-logout">
+          <yotta-button passport :style="{ backgroundColor: '#EA8400', color: '#fff' }" @click="logout">Logout</yotta-button>
+        </div>
       </div>
     </div>
   </div>
@@ -45,12 +48,34 @@ import YottaButton from '@/components/Reusable/Button'
 import YottaIcon from '@/components/Reusable/Icon'
 import YottaInput from '@/components/Reusable/Input'
 
+import { QUERY_ME_SERVER } from '@/graphql/users'
+import { onLogout } from '@/plugins/vue-apollo'
+
 export default {
   name: 'PageSettings',
   components: {
     YottaButton,
     YottaIcon,
     YottaInput,
+  },
+  data () {
+    return {
+      me: null
+    }
+  },
+  apollo: {
+    me: QUERY_ME_SERVER
+  },
+  computed: {
+    usernameTitle () {
+      return this.me && this.me.username.includes('@') ? 'email': "phone"
+    }
+  },
+  methods: {
+    logout () {
+      onLogout(this.$apolloProvider.defaultClient)
+      this.$router.push("/passport/login")
+    },
   },
 }
 </script>
@@ -87,6 +112,9 @@ export default {
     margin-bottom: 24px;
     &:last-of-type {
       margin-bottom: 0;
+    }
+    &.is-logout {
+      margin-top: 70px;
     }
   }
   &__label {
