@@ -2,7 +2,7 @@
   <nav class="nav-menu">
     <div class="nav-menu__links">
       <template v-for="link in navLinks">
-        <router-link exact active-class="is-active" class="nav-menu__link" :to="link.path" :key="link.title">{{ link.title }}</router-link>
+        <router-link :exact="!!link.exact" active-class="is-active" class="nav-menu__link" :to="link.path" :key="link.title">{{ link.title }}</router-link>
       </template>
     </div>
   </nav>
@@ -14,7 +14,7 @@ export default {
   data () {
     return {
       navLinks: [
-        { title: 'Home', path: '/' },
+        { title: 'Home', path: '/', exact: true },
         { title: 'Currencies', path: '/currencies' },
         { title: 'Categories', path: '/categories' },
         { title: 'Settings', path: '/settings' },

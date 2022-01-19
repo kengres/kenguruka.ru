@@ -1,5 +1,5 @@
 <template>
-  <div :class="['ytt-input', { 'is-disabled': disabled, 'is-passport': passport }]">
+  <div :class="['ytt-input', { 'is-disabled': disabled, 'is-passport': passport, 'is-noedit': noEdit }]">
     <input
       v-bind="$attrs"
       class="input"
@@ -19,6 +19,10 @@ export default {
       default: '',
     },
     disabled: {
+      type: Boolean,
+      default: false,
+    },
+    noEdit: {
       type: Boolean,
       default: false,
     },
@@ -66,12 +70,27 @@ export default {
       }
     }
   }
+  &.is-noedit {
+    .input {
+      // background-color: #fff;
+      // border-color: #fff;
+      // color: #08BE51;
+      // border-radius: 0;
+      cursor: not-allowed;
+      user-select: none;
+      pointer-events: none;
+
+      &::placeholder {
+        color: inherit;
+      }
+    }
+  }
 }
 .input {
   -webkit-appearance: none;
   background-color: inherit;
   background-image: none;
-  border-radius: 4px;
+  // border-radius: 4px;
   border: 1px solid var(--color-primary);
   color: #606266;
   display: inline-flex;
