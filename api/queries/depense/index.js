@@ -1,5 +1,6 @@
 const Depense = require("../../models/depense");
 const Category = require("../../models/category");
+const { ForbiddenError } = require('apollo-server-express')
 
 const getMonthFirstDay = (date) => {
   const d = new Date(date);
@@ -13,14 +14,18 @@ const getMonthLastDay = (date) => {
 };
 
 module.exports = {
-  depenses: async (_p, { monthDate = new Date(), categoryId }) => {
+  depenses: async (_p, { monthDate = new Date(), categoryId }, { currentUser }) => {
     // console.log(`depense query: for ${monthDate} in ${categoryId}`);
+    if (!currentUser) {
+      throw new ForbiddenError("Unauthorized!");
+    }
     // todo: Invalid dates
     const d = new Date(monthDate);
     const monthFilter = d.getMonth();
     const yearFilter = d.getFullYear();
 
     const filters = {
+      createdBy: currentUser.id,
       date: {
         $gte: `${getMonthFirstDay(new Date(yearFilter, monthFilter, 1))}`,
         $lte: `${getMonthLastDay(new Date(yearFilter, monthFilter, 1))}`,
@@ -29,9 +34,9 @@ module.exports = {
 
     if (categoryId) {
       // console.log(`categoryId`, categoryId)
-      const cat = await Category.findById(categoryId)
+      const cat = await Category.findById(categoryId);
       if (cat) {
-        filters.category = cat.id
+        filters.category = cat.id;
       }
     }
 
@@ -44,8 +49,15 @@ module.exports = {
       throw e;
     }
   },
-  depense: async (_p, { id }) => {
-    let filters = { _id: id };
+  depense: async (_p, { id }, { currentUser }) => {
+    if (!currentUser) {
+      throw new ForbiddenError("Unauthorized!");
+    }
+    let filters = {
+      _id: id,
+      createdBy: currentUser.id,
+    };
+
     try {
       const depense = await Depense.findOne(filters);
       return depense;

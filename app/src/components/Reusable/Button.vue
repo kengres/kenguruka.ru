@@ -47,6 +47,10 @@ export default {
       type: Boolean,
       default: false,
     },
+    passport: {
+      type: Boolean,
+      default: false,
+    },
   },
   computed: {
     btnClasses() {
@@ -56,7 +60,7 @@ export default {
       if (this.icon) classes.push('is-icon')
       if (this.circle) classes.push('is-circle')
       if (this.raised) classes.push('is-raised')
-      if (this.loading) classes.push('is-loading')
+      if (this.passport) classes.push('is-passport')
       return classes.join(' ')
     },
     cptStyles() {
@@ -204,10 +208,17 @@ export default {
   border-color: var(--color-text);
   color: #fff;
 }
-.is-profile {
-  background-color: var(--color-profile);
-  border-color: var(--color-profile);
-  color: #fff;
+.is-passport {
+  border-radius: 0;
+  width: 100%;
+  text-align: center;
+  justify-content: center;
+  font-size: 16px;
+
+  &:disabled {
+    background-color: rgba(8, 190, 81, 0.449);
+    border-color: var(--color-disabled);
+  }
 }
 .is-text {
   background-color: transparent;

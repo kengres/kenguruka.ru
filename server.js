@@ -4,6 +4,7 @@ const mongoose = require('mongoose');
 const { ApolloServer } = require('apollo-server-express');
 const typeDefs = require("./api/typeDefs");
 const resolvers = require("./api/resolvers");
+const { getUserDataFromReq  } = require("./api/utils/auth");
 const PORT = process.env.PORT || 4000;
 
 const server = new ApolloServer({
@@ -12,7 +13,8 @@ const server = new ApolloServer({
   introspection: true,
   playground: true,
   context: async ({ req }) => {
-    return {};
+    const { authToken, currentUser, reqUrl, reqIp } = await getUserDataFromReq(req)
+    return { authToken, currentUser, reqUrl, reqIp };
   },
 });
 
@@ -33,7 +35,13 @@ server.applyMiddleware({ app, apiPath });
 
 mongoose.set('useFindAndModify', false);
 
-mongoose.connect(process.env.MONGO_URL, { useNewUrlParser: true, useUnifiedTopology: true })
+const mongooseOptions = {
+  useCreateIndex: true,
+  useNewUrlParser: true,
+  useUnifiedTopology: true,
+};
+
+mongoose.connect(process.env.MONGO_URL, mongooseOptions)
   .then(async () => {
     app.listen(PORT, () => {
       console.log(`🚀 Server ready at http://localhost:${PORT}${server.graphqlPath}`)

@@ -1,26 +1,34 @@
 const Category = require("../../models/category");
+const { ForbiddenError } = require("apollo-server-express");
 
 module.exports = {
-  categories: async (_p, _i) => {
-    let filters = {}
-    
+  categories: async (_p, _i, { currentUser }) => {
+    if (!currentUser) {
+      throw new ForbiddenError("Unauthorized!");
+    }
+    let filters = {
+      createdBy: currentUser.id,
+    };
+
     try {
-      const result = await Category.find(filters)
+      const result = await Category.find(filters);
       // console.log(`result: `, result)
-      return result
+      return result;
     } catch (e) {
-      console.log(`e: `, e)
+      console.log(`e: `, e);
       throw e;
     }
   },
-  category: async (_p, { id }) => {
-    // console.log(`category query, id: ${id}`);
-    let filters = { _id: id }
+  category: async (_p, { id }, { currentUser }) => {
+    if (!currentUser) {
+      throw new ForbiddenError("Unauthorized!");
+    }
+    let filters = { _id: id, createdBy: currentUser.id };
     try {
-      const category = await Category.findOne(filters)
-      return category
+      const category = await Category.findOne(filters);
+      return category;
     } catch (error) {
-      throw (error);
+      throw error;
     }
   },
-}
+};

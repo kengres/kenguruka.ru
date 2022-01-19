@@ -4,7 +4,7 @@ module.exports = {
     themeColor: "#08843A",
     appleMobileWebAppCapable: "yes",
     appleMobileWebAppStatusBarStyle: "#FAE7C6",
-    assetsVersion: "1.0.1",
+    assetsVersion: "1.0.2",
     iconPaths: {
       favicon32: "img/icons/favicon-32x32.png",
       favicon16: "img/icons/favicon-16x16.png",

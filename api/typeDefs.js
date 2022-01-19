@@ -1,13 +1,16 @@
 const { gql } = require('apollo-server-express')
 
 module.exports = gql`
+  scalar JSON
+
   type User {
     id: ID!
-    active: Boolean
-    email: String
-    name: String
+    active: Boolean!
+    username: String!
+    name: String!
+    stats: JSON
     verified: Boolean!
-    role: Int!
+    verifiedAt: String
     createdAt: String
     updatedAt: String
   }
@@ -46,12 +49,19 @@ module.exports = gql`
     updatedBy: User
   }
 
+  type AuthData {
+    userId: ID!
+    token: String!
+    refreshToken: String!
+  }
+
   type Query {
-    # me: User
-    # users: [User!]!
+    me: User
+    # me @client: User
+    users: [User!]!
     # user(id: ID!): User
     # DEPENSES
-    depenses(monthDate: String categoryId: ID): [Depense!]!
+    depenses(monthDate: String, categoryId: ID): [Depense!]!
     depense(id: ID!): Depense
     # CURRENCIES
     currencies: [Currency!]!
@@ -63,12 +73,13 @@ module.exports = gql`
 
   type Mutation {
     # USERS
-    # createUser(name: String! password: String! email: String! role: Int! active: Boolean!): User
-    # updateUser(id: ID! name: String password: String email: String role: Int active: Boolean verified: Boolean): User
-    # updateProfile(name: String newPassword: String oldPassword: String email: String): User
+    createAccount(name: String, username: String!, password: String!): String!
+    updateProfile(name: String, newPassword: String, oldPassword: String, username: String): User
+    verifyCode(username: String!, code: String!): AuthData!
     # deleteUser(id: ID!): User
+    firtUser: String
     # AUTH STRATEGY
-    # logUserIn(email: String! password: String!): AuthData!
+    logUserIn(username: String!, password: String!): AuthData!
     # refreshTokens(token: String! refreshToken: String!): AuthData!
     # DEPENSES
     createDepense(name: String!, notes: String, amount: Int, currencyId: ID!, categoryId: ID, date: String): Depense
@@ -81,7 +92,6 @@ module.exports = gql`
       categoryId: ID
       date: String
     ): Depense
-    updateDepenseDates: String
     deleteDepense(id: ID!): Depense
     # CURRENCIES
     createCurrency(name: String!, abbreviation: String!): Currency
