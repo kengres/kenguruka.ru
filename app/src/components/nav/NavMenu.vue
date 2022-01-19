@@ -1,24 +1,46 @@
 <template>
   <nav class="nav-menu">
-    <div class="gk-container">
-      <div class="nav-menu__links">
-        <router-link exact active-class="is-active" class="nav-menu__link" to="/">Home</router-link>
-        <router-link active-class="is-active" class="nav-menu__link" to="/currencies">Currencies</router-link>
-        <router-link active-class="is-active" class="nav-menu__link" to="/categories">Categories</router-link>
-      </div>
+    <div class="nav-menu__links">
+      <template v-for="link in navLinks">
+        <router-link :exact="!!link.exact" active-class="is-active" class="nav-menu__link" :to="link.path" :key="link.title">{{ link.title }}</router-link>
+      </template>
     </div>
   </nav>
 </template>
+
+<script>
+export default {
+  name: "NavMenu",
+  data () {
+    return {
+      navLinks: [
+        { title: 'Home', path: '/', exact: true },
+        { title: 'Currencies', path: '/currencies' },
+        { title: 'Categories', path: '/categories' },
+        { title: 'Settings', path: '/settings' },
+      ]
+    }
+  },
+}
+</script>
 
 <style lang="scss" scoped>
 .nav-menu {
   background-color: #fff;
   box-shadow: 1px -4px 40px 0px rgba(11, 74, 37, 0.102);
+  overflow-x: hidden;
 
   &__links {
     display: flex;
-    column-gap: 20px;
+    column-gap: 16px;
     padding: 12px;
+    overflow-x: auto;
+    // * HIDE SCROLLBAR
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+    &::-webkit-scrollbar {
+      display: none;
+    }
   }
   &__link {
     display: inline-flex;

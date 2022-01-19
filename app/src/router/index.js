@@ -6,6 +6,7 @@ import Home from '../pages'
 import DepenseId from '../pages/_depenseId/index.vue'
 import Currencies from '../pages/Currencies.vue'
 import Categories from '../pages/categories/index.vue'
+import Settings from "../pages/settings/index.vue";
 import { checkUserInterceptor } from './interceptors';
 
 Vue.use(VueRouter)
@@ -47,6 +48,14 @@ const routes = [
           userRequired: true,
         },
       },
+      {
+        path: "/settings",
+        name: "Settings",
+        component: Settings,
+        meta: {
+          userRequired: true,
+        },
+      },
     ],
   },
   {
@@ -57,6 +66,17 @@ const routes = [
         path: "/passport/login",
         name: "PassportLogin",
         component: () => import(/* webpackChunkName: "about" */ "../pages/passport/login.vue"),
+        meta: {
+          title: "Login",
+        },
+      },
+      {
+        path: "/passport/signup",
+        name: "PassportSignup",
+        component: () => import(/* webpackChunkName: "about" */ "../pages/passport/signup.vue"),
+        meta: {
+          title: "Sign up",
+        },
       },
     ],
   },

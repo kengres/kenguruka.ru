@@ -77,21 +77,12 @@ module.exports = gql`
     updateProfile(name: String, newPassword: String, oldPassword: String, username: String): User
     verifyCode(username: String!, code: String!): AuthData!
     # deleteUser(id: ID!): User
-    firtUser: String
     # AUTH STRATEGY
     logUserIn(username: String!, password: String!): AuthData!
     # refreshTokens(token: String! refreshToken: String!): AuthData!
     # DEPENSES
     createDepense(name: String!, notes: String, amount: Int, currencyId: ID!, categoryId: ID, date: String): Depense
-    updateDepense(
-      id: ID!
-      name: String
-      notes: String
-      amount: Int
-      currencyId: ID
-      categoryId: ID
-      date: String
-    ): Depense
+    updateDepense(id: ID! name: String notes: String amount: Int currencyId: ID categoryId: ID date: String): Depense
     deleteDepense(id: ID!): Depense
     # CURRENCIES
     createCurrency(name: String!, abbreviation: String!): Currency

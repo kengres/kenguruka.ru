@@ -2,7 +2,7 @@
   <div class="p-layout">
     <div class="p-layout__content">
       <div class="p-layout__title">
-        <span class="p-layout__title-inner">Login</span>
+        <span class="p-layout__title-inner">{{ title }}</span>
       </div>
       <router-view />
     </div>
@@ -12,6 +12,11 @@
 <script>
 export default {
   name: "LayoutPassport",
+  computed: {
+    title () {
+      return this.$route.meta.title
+    }
+  },
 }
 </script>
 
@@ -32,13 +37,14 @@ export default {
     padding: 25% 16px 80px;
   }
   &__title {
+    --size: 160px;
     position: absolute;
     top: 0;
     left: 50%;
     transform: translate(-50%, -60%);
-    width: 140px;
-    height: 140px;
-    border-radius: 50%;
+    width: var(--size);
+    height: var(--size);
+    border-radius: var(--size);
     background-color: #E8FEF1;
     display: flex;
     padding: 16px;

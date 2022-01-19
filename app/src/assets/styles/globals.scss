@@ -18,3 +18,25 @@
   }
 }
 /* #endregion */
+
+/* #region */
+// COLORS
+.is {
+  &-primary {
+    &--text {
+      color: var(--color-primary);
+    }
+    &--bg {
+      background-color: var(--color-primary);
+    }
+  }
+  &-success {
+    &--text {
+      color: var(--color-success);
+    }
+    &--bg {
+      background-color: var(--color-success);
+    }
+  }
+}
+/* #endregion */
