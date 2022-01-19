@@ -1,13 +1,14 @@
 const { UserInputError } = require('apollo-server-express');
 const { isValidPhone, isValidEmail, isValidPassword, transformPhone, isValidCode } = require('../../utils/utils');
 const User = require('../../models/user')
+const Depense = require('../../models/depense')
 const bcrypt = require('bcrypt');
 const jwt = require("jsonwebtoken");
 const { getUniqCode, sendEmail } = require('../../utils/sendgrid');
 const { sendSmsCodeToClient } = require('../../utils/twilio');
 
-const token_key = process.env.TOKEN_SECRET || "kando_PrivateKey";
-const refresh_token_key = process.env.REFRESH_TOKEN_SECRET || "kando_PrivateKey_refresh";
+const token_key = process.env.TOKEN_STRING_SECRET;
+const refresh_token_key = process.env.REFRESH_TOKEN_STRING_SECRET;
 const tokenExpTime = "7d";
 const refreshTokenExpTime = "14d";
 
@@ -137,7 +138,7 @@ module.exports = {
           throw new UserInputError("Invalid credentials!");
         }
         user.verified = true;
-        user.verifiedAt = Date.now()
+        user.verifiedAt = Date.now();
         user.stats = {
           ...user.stats,
           verificationCode: "",
@@ -206,4 +207,83 @@ module.exports = {
       throw error;
     }
   },
+  logUserIn: async (_p, { username, password }) => {
+    if (!username || !password) {
+      throw new UserInputError("Invalid credentials");
+    }
+    // * MODE
+    const isPhoneMode = isValidPhone(username);
+    const isEmailMode = !isPhoneMode && isValidEmail(username);
+    if (!isPhoneMode && !isEmailMode) {
+      throw new UserInputError(`Invalid email or password!`);
+    }
+
+    try {
+      const user = await User.findOne({ username });
+      if (!user) {
+        throw new UserInputError("Invalid Email or Password!");
+      }
+      if (!user.active) {
+        throw new ForbiddenError("Not Authorized!");
+      }
+      // console.log(`user: `, user._doc);
+      const pwdMatch = await bcrypt.compare(password, user._doc.password);
+      if (!pwdMatch) {
+        console.log(`password don't match...`);
+        throw new UserInputError("Invalid Email or Password");
+      }
+      const token = jwt.sign(
+        {
+          userId: user.id,
+          username: user.username,
+          iat: Math.floor(Date.now() / 1000), // initier quand
+        },
+        token_key,
+        {
+          expiresIn: tokenExpTime,
+        }
+      );
+
+      // ici on genere aussi le refresh token
+      const refreshToken = jwt.sign(
+        {
+          userId: user.id,
+          username: user.username,
+          iat: Math.floor(Date.now() / 1000),
+        },
+        refresh_token_key,
+        {
+          expiresIn: refreshTokenExpTime,
+        }
+      );
+
+      user.tokens.push({
+        token: refreshToken,
+        ipAddress: "",
+        device: "",
+      });
+      // todo delete all tokens with same ip, or deprecated
+      await user.save();
+      return {
+        userId: user.id,
+        token,
+        refreshToken,
+      };
+    } catch (error) {
+      console.log(`error login: `, error);
+      throw error;
+    }
+  },
+  firtUser: async (__, ___, { currentUser }) => {
+    if (!currentUser) return 'error'
+    try {
+      await Depense.updateMany({}, {
+        createdBy: currentUser.id,
+        updatedBy: currentUser.id,
+      })
+      return 'ok'
+    } catch (error) {
+      throw error
+    }
+  }
 };

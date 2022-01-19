@@ -15,3 +15,22 @@ export const MONTH_LIST = [
   "Nov:November",
   "Dec:December",
 ];
+
+export const nav = {
+  passport: {
+    main: "/passport",
+    login: "/passport/login",
+    signup: "/passport/signup",
+  },
+  categories: {
+    main: "/categories",
+    id: "/categories/id",
+  },
+  currencies: {
+    main: "/currencies",
+  },
+  users: {
+    main: "/users",
+    profile: "/users/:id",
+  },
+};

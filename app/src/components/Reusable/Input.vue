@@ -1,5 +1,5 @@
 <template>
-  <div :class="['ytt-input', { 'is-disabled': disabled }]">
+  <div :class="['ytt-input', { 'is-disabled': disabled, 'is-passport': passport }]">
     <input
       v-bind="$attrs"
       class="input"
@@ -19,6 +19,10 @@ export default {
       default: '',
     },
     disabled: {
+      type: Boolean,
+      default: false,
+    },
+    passport: {
       type: Boolean,
       default: false,
     },
@@ -48,6 +52,18 @@ export default {
       border-color: #e4e7ed;
       color: #c0c4cc;
       cursor: not-allowed;
+    }
+  }
+  &.is-passport {
+    .input {
+      background-color: #fff;
+      border-color: #fff;
+      color: #08BE51;
+      border-radius: 0;
+
+      &::placeholder {
+        color: inherit;
+      }
     }
   }
 }

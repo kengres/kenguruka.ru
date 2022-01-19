@@ -57,6 +57,7 @@ module.exports = gql`
 
   type Query {
     me: User
+    # me @client: User
     users: [User!]!
     # user(id: ID!): User
     # DEPENSES
@@ -76,8 +77,9 @@ module.exports = gql`
     updateProfile(name: String, newPassword: String, oldPassword: String, username: String): User
     verifyCode(username: String!, code: String!): AuthData!
     # deleteUser(id: ID!): User
+    firtUser: String
     # AUTH STRATEGY
-    # logUserIn(email: String! password: String!): AuthData!
+    logUserIn(username: String!, password: String!): AuthData!
     # refreshTokens(token: String! refreshToken: String!): AuthData!
     # DEPENSES
     createDepense(name: String!, notes: String, amount: Int, currencyId: ID!, categoryId: ID, date: String): Depense

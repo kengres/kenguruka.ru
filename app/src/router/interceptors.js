@@ -1,7 +1,7 @@
-import { getTokenInfo, getPermissionFromRole } from '@/utils/utils'
+import { getTokenInfo } from '@/utils/auth'
 import { LOGIN_TOKEN_NAME, nav, REFRESH_TOKEN_NAME } from "@/utils/constants";
-import { REFRESH_TOKEN_MUTATION, QUERY_ME_CLIENT, QUERY_ME_SERVER, SET_PERMISSIONS_MUTATION } from '@/utils/queries'
-import { onLogin } from '@/plugins/apollo'
+import { REFRESH_TOKEN_MUTATION, /* QUERY_ME_CLIENT, */ QUERY_ME_SERVER } from '@/graphql/users'
+import { onLogin } from '@/plugins/vue-apollo'
 
 import { apolloProvider } from "../main";
 
@@ -13,10 +13,10 @@ export const checkUserInterceptor = async (to, __, next) => {
     try {
       const userData = await getUserData()
       // console.log(`[Interceptor] permissions: `, getPermissionFromRole(userData.role))
-      await apolloProvider.defaultClient.mutate({
-        mutation: SET_PERMISSIONS_MUTATION,
-        variables: getPermissionFromRole(userData.role)
-      })
+      // await apolloProvider.defaultClient.mutate({
+      //   mutation: SET_PERMISSIONS_MUTATION,
+      //   variables: getPermissionFromRole(userData.role)
+      // })
       if (to.matched.some(record => record.meta.role)) {
         // console.log(`user role: `, userData.role)
         // console.log(`req. role: `, to.meta.role)
@@ -64,14 +64,15 @@ const getUserData = async () => {
 }
 
 const fetchUserData = async () => {
+  // console.log(`fetching user...`)
   const { data } = await apolloProvider.defaultClient.query({
-    query: QUERY_ME_CLIENT
-  })
-  if (!data) {
-    const { data: dtServer } = await apolloProvider.defaultClient.query({ query: QUERY_ME_SERVER });
-    // console.log(`dtServer: `, dtServer.me)
-    return dtServer.me
-  }
+    query: QUERY_ME_SERVER,
+  });
+  // if (!data) {
+  //   const { data: dtServer } = await apolloProvider.defaultClient.query({ query: QUERY_ME_SERVER });
+  //   // console.log(`dtServer: `, dtServer.me)
+  //   return dtServer.me
+  // }
   // console.log(`dtClient: `, data.me)
   return data.me;
 }
