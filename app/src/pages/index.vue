@@ -51,7 +51,7 @@
           </li>
         </ul>
       </section>
-      <div class="depenses__add">
+      <div class="depenses__add" v-show="!modalVisible">
         <ka-button @click="onAdd" type="primary" icon circle>
           <ka-icon name="add_circle" />
         </ka-button>

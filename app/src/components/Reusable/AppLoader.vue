@@ -1,5 +1,5 @@
 <template>
-  <div class="loader">
+  <div class="loader" functional>
     Loading...
   </div>
 </template>

@@ -2,6 +2,7 @@ import Vue from "vue";
 
 // Reusable
 import AddButton from "@/components/Reusable/AddButton";
+import KaAppEmpty from "@/components/Reusable/AppEmpty";
 import KaAppLoader from "@/components/Reusable/AppLoader";
 import KaButton from "@/components/Reusable/Button";
 import KaIcon from "@/components/Reusable/Icon";
@@ -14,6 +15,7 @@ import KaTextarea from "@/components/Reusable/Textarea";
 const Components = {
   // Reusable
   AddButton,
+  KaAppEmpty,
   KaAppLoader,
   KaButton,
   KaIcon,
