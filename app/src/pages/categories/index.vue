@@ -1,33 +1,31 @@
 <template>
   <div class="categories">
     <h1 class="categories__title">Categories</h1>
+    <ka-app-loader v-if="isLoading" />
     <ul class="categories__list">
       <template v-for="(cat, i) in categories">
         <li :class="['categories__item', `is-${colors[i % colors.length]}`]" :key="cat.id" @click="onUpdateStart(cat)">{{ cat.name }}</li>
       </template>
     </ul>
-    <div class="categories__add">
+    <div class="categories__add" v-show="!modalVisible">
       <add-button @click="modalVisible = true" />
     </div>
 
-    <modal :visible="modalVisible" @close="modalVisible = false">
-      <my-input v-model="categoryName" />
+    <ka-modal :visible="modalVisible" @close="modalVisible = false">
+      <ka-input v-model="categoryName" />
       <template v-slot:footer>
         <div class="categories__footer">
-          <my-button type="success" @click="onSubmit">submit</my-button>
-          <my-button type="danger" @click="onDelete" v-if="isEditMode">delete</my-button>
+          <ka-button type="success" @click="onSubmit">submit</ka-button>
+          <ka-button type="danger" @click="onDelete" v-if="isEditMode">delete</ka-button>
         </div>
       </template>
-    </modal>
+    </ka-modal>
   </div>
 </template>
 
 <script>
 import { CATEGORIES_QUERY, CATEGORIES_CREATE_MUTATION, CATEGORIES_UPDATE_MUTATION, CATEGORIES_DELETE_MUTATION } from '@/graphql/categories';
 import AddButton from '../../components/Reusable/AddButton.vue';
-import Modal from '../../components/Reusable/Modal.vue';
-import MyInput from "@/components/Reusable/Input";
-import MyButton from "@/components/Reusable/Button";
 export default {
   name: "Categories",
   metaInfo: {
@@ -35,9 +33,6 @@ export default {
   },
   components: {
     AddButton,
-    Modal,
-    MyInput,
-    MyButton,
   },
   data () {
     return {
@@ -54,7 +49,10 @@ export default {
   computed: {
     isEditMode () {
       return !!this.categoryEdit && !!this.categoryEdit.id
-    }
+    },
+    isLoading () {
+      return this.categories.length === 0 && this.$apollo.loading
+    },
   },
   methods: {
     async onSubmit () {
@@ -75,6 +73,7 @@ export default {
         this.categoryEdit = null
         this.refetch()
       } catch (error) {
+        // eslint-disable-next-line
         console.log(`error add: `, error);
       }
     },
@@ -93,6 +92,7 @@ export default {
         this.categoryEdit = null
         this.refetch()
       } catch (error) {
+        // eslint-disable-next-line
         console.log(`error add: `, error);
       }
     },

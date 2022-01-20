@@ -51,12 +51,12 @@ export default {
     max-width: 100vw;
     width: 100vw;
     margin: 0 auto;
-    border-radius: 14px 14px 0 0;
+    border-radius: 24px 24px 0 0;
     box-shadow: 2px 2px 6px 1px rgba(0, 0, 0, 0.15);
     position: relative;
   }
   &__body {
-    padding-top: 16px;
+    padding-top: 20px;
   }
 }
 .fade-enter-active,

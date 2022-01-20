@@ -72,7 +72,7 @@ $vs-state-disabled-cursor: not-allowed !default;
 //  Borders
 $vs-border-width: 1px !default;
 $vs-border-style: solid !default;
-$vs-border-radius: 8px !default;
+$vs-border-radius: 0px !default;
 $vs-border-color: var(--color-primary) !default;
 
 //  Component Controls: Clear, Open Indicator

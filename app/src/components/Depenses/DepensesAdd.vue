@@ -1,26 +1,27 @@
 <template>
   <div class="depenses-add">
     <div class="depenses-add__item">
-      <my-input v-model="form.name" />
+      <ka-input v-model.trim="form.name" />
     </div>
     <div class="depenses-add__item">
-      <my-input type="number" v-model="form.amount" />
+      <ka-input type="number" v-model="form.amount" />
     </div>
     <div class="depenses-add__item">
-      <my-select :options="categories" v-model="form.category" label="name" />
+      <ka-select :options="categories" v-model="form.category" label="name" />
     </div>
     <div class="depenses-add__item">
-      <my-select :options="currencies" v-model="form.currency" label="abbreviation" />
+      <ka-select :options="currencies" v-model="form.currency" label="abbreviation" />
     </div>
     <div class="depenses-add__item">
       <input class="depenses-add__datetime" type="datetime-local" min="2021-10-01T00:00" :max="`${thisYear}-12-31T00:00`" v-model="form.date" />
+    </div>
+    <div class="depenses-add__item">
+      <ka-textarea v-model.trim="form.notes" />
     </div>
   </div>
 </template>
 
 <script>
-import MyInput from "@/components/Reusable/Input";
-import MySelect from "@/components/Reusable/Select";
 import { CURRENCIES_QUERY } from '@/graphql/currencies';
 import { CATEGORIES_QUERY } from '@/graphql/categories';
 import { DEPENSES_UPDATE_MUTATION, DEPENSES_ADD_MUTATION } from '@/graphql/depenses';
@@ -28,10 +29,6 @@ import { formtDateToLocal } from '@/utils/utils'
 
 export default {
   name: "DepensesAdd",
-  components: {
-    MyInput,
-    MySelect,
-  },
   props: {
     depenseEdit: {
       type: Object,
@@ -46,6 +43,7 @@ export default {
         currency: "",
         category: "",
         date: formtDateToLocal(new Date()),
+        notes: "",
       },
       currencies: [],
       categories: [],
@@ -84,6 +82,7 @@ export default {
         this.form.currency = this.depenseEdit.currency;
         this.form.category = this.depenseEdit.category;
         this.form.date = formtDateToLocal(this.depenseEdit.date);
+        this.form.notes = this.depenseEdit.notes;
       }
     },
     async onSubmit() {
@@ -93,6 +92,7 @@ export default {
         currencyId: this.form.currency && this.form.currency.id,
         categoryId: this.form.category && this.form.category.id,
         date: this.form.date,
+        notes: this.form.notes,
       };
       if (this.isEditMode) {
         variables.id = this.depenseEdit.id;
@@ -127,7 +127,7 @@ export default {
     display: flex;
     width: 100%;
     padding: 0 14px;
-    border-radius: 4px;
+    border-radius: 0px;
     border: 1px solid var(--color-primary);
     color: #606266;
     height: 40px;

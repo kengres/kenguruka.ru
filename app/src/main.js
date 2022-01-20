@@ -5,12 +5,14 @@ import "./assets/styles/index.scss"
 import './registerServiceWorker'
 import router from './router'
 import { createProvider } from './plugins/vue-apollo'
+import "./plugins/reusable";
 
 Vue.config.productionTip = false
 
 Vue.use(VueMeta, {
   refreshOnceOnNavigation: true,
 });
+
 
 export const apolloProvider = createProvider();
 

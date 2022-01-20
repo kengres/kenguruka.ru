@@ -18,6 +18,10 @@
         <div class="dep-id__label">date</div>
         <div class="dep-id__detail">{{ depense.createdAt | dateFilter }}</div>
       </div>
+      <div class="dep-id__item">
+        <div class="dep-id__label">Notes</div>
+        <div class="dep-id__detail">{{ depense.notes }} <span v-show="!depense.notes">&mdash;</span></div>
+      </div>
     </div>
   </div>
 </template>

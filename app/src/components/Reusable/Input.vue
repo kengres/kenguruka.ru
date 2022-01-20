@@ -39,6 +39,7 @@ export default {
   computed: {
      inputListeners () {
       const vm = this
+      
       const isTypeNumber = !!this.$attrs && !!this.$attrs.type && this.$attrs.type === 'number'
       // `Object.assign` merges objects together to form a new object
       return Object.assign(
@@ -52,14 +53,14 @@ export default {
           input: function (event) {
             if (vm.noEdit) return
             const val = event.target.value
-            const val2 = isTypeNumber ? `${val}` : val
+            const val2 = isTypeNumber ? `${+val}` : val
             vm.$emit('input', val2)
             vm.$emit('change', val2)
           },
           change: function (event) {
             if (vm.noEdit) return
             const val = event.target.value
-            const val2 = isTypeNumber ? `${val}` : val
+            const val2 = isTypeNumber ? `${+val}` : val
             vm.$emit('input', val2)
             vm.$emit('change', val2)
           },

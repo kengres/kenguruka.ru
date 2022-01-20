@@ -4,7 +4,7 @@
       <yotta-input passport v-model.trim="username" placeholder="Email or phone..." />
     </div>
     <div class="login__item">
-      <yotta-input passport type="password" v-model.trim="password" placeholder="Password..." />
+      <yotta-input passport type="password" v-model.trim="password" placeholder="Password..." @keyup.enter="onLogin" />
     </div>
     <div class="login__item is-actions">
       <yotta-btn type="primary" passport @click="onLogin" :disabled="formDisabled">Login</yotta-btn>
@@ -49,7 +49,7 @@ export default {
         username: this.username,
         password: this.password,
       }
-      console.log(`variables`, variables)
+      // console.log(`variables`, variables)
       try {
         this.loading = true;
         const { data: { logUserIn: { token, refreshToken } } } = await this.$apollo.mutate({
@@ -58,13 +58,14 @@ export default {
         })
         await onLogin(this.$apolloProvider.defaultClient, token, refreshToken);
         if (this.firstLogin) {
-          console.log(`first login...`)
+          // console.log(`first login...`)
           this.$router.push(`/?ac=frst-lgn`)
         } else {
-          console.log(`not first login...`)
+          // console.log(`not first login...`)
           this.$router.push(`/`)
         }
       } catch (error) {
+        // eslint-disable-next-line
         console.log(`error: `, error)
         this.errorLogin = error.message
       } finally {

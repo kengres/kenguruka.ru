@@ -1,21 +1,22 @@
 <template>
   <div class="settings">
     <div class="settings__heading">
-      <yotta-button icon circle type="primary" class="settings__back" @click="$router.back()">
-        <yotta-icon name="arrow_back" />
-      </yotta-button>
+      <ka-button icon circle type="primary" class="settings__back" @click="$router.back()">
+        <ka-icon name="arrow_back" />
+      </ka-button>
       <div class="settings__title">Settings</div>
     </div>
     <div class="settings__content">
       <div class="settings__avatar is-success--text">
-        <yotta-icon name="person" :size="60" />
+        <ka-icon name="person" :size="60" />
       </div>
+      <ka-app-loader v-if="$apollo.loading" />
       <div class="settings__items" v-if="me">
         <div class="settings__item">
           <div class="settings__form-item">
             <div class="settings__label">name:</div>
             <div class="settings__input">
-              <yotta-input passport :value="me.name || me.username" no-edit />
+              <ka-input passport :value="me.name || me.username" no-edit />
             </div>
           </div>
         </div>
@@ -23,7 +24,7 @@
           <div class="settings__form-item">
             <div class="settings__label">{{ usernameTitle }}:</div>
             <div class="settings__input">
-              <yotta-input passport :value="me.username" no-edit />
+              <ka-input passport :value="me.username" no-edit />
             </div>
           </div>
         </div>
@@ -31,12 +32,12 @@
           <div class="settings__setting">
             <div class="settings__setting-name">Change password</div>
             <div class="settings__setting-icon">
-              <yotta-icon name="keyboard_arrow_right" />
+              <ka-icon name="keyboard_arrow_right" />
             </div>
           </div>
         </div>
         <div class="settings__item is-logout">
-          <yotta-button passport :style="{ backgroundColor: '#EA8400', color: '#fff' }" @click="logout">Logout</yotta-button>
+          <ka-button passport :style="{ backgroundColor: '#EA8400', color: '#fff' }" @click="logout">Logout</ka-button>
         </div>
       </div>
     </div>
@@ -44,20 +45,11 @@
 </template>
 
 <script>
-import YottaButton from '@/components/Reusable/Button'
-import YottaIcon from '@/components/Reusable/Icon'
-import YottaInput from '@/components/Reusable/Input'
-
 import { QUERY_ME_SERVER } from '@/graphql/users'
 import { onLogout } from '@/plugins/vue-apollo'
 
 export default {
   name: 'PageSettings',
-  components: {
-    YottaButton,
-    YottaIcon,
-    YottaInput,
-  },
   data () {
     return {
       me: null

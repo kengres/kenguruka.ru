@@ -4,9 +4,9 @@
       <section class="depenses">
         <h1 :class="['depenses__heading', {'is-centered': !activeCategory}]">
           <div class="depenses__back" v-if="activeCategory">
-            <yotta-button icon circle type="primary" @click="$router.push('/')">
-              <yotta-icon name="arrow_back" />
-            </yotta-button>
+            <ka-button icon circle type="primary" @click="$router.push('/')">
+              <ka-icon name="arrow_back" />
+            </ka-button>
           </div>
           <span class="depenses__title">Depenses</span>
         </h1>
@@ -22,17 +22,18 @@
               </swiper-slide>
             </template>
             <div class="swiper-button-prev" slot="button-prev">
-              <yotta-button icon circle type="primary">
-                <yotta-icon name="arrow_back" />
-              </yotta-button>
+              <ka-button icon circle type="primary">
+                <ka-icon name="arrow_back" />
+              </ka-button>
             </div>
             <div class="swiper-button-next" slot="button-next">
-              <yotta-button icon circle type="primary">
-                <yotta-icon name="arrow_forward" />
-              </yotta-button>
+              <ka-button icon circle type="primary">
+                <ka-icon name="arrow_forward" />
+              </ka-button>
             </div>
           </swiper>
         </div>
+        <ka-app-loader v-if="isLoading" />
         <ul class="depenses__list">
           <li class="depenses__empty" v-if="!$apollo.loading && depenses.length === 0">
             <div class="depenses__empty-inner">
@@ -51,23 +52,23 @@
         </ul>
       </section>
       <div class="depenses__add">
-        <yotta-button @click="onAdd" type="primary" icon circle>
-          <yotta-icon name="add_circle" />
-        </yotta-button>
+        <ka-button @click="onAdd" type="primary" icon circle>
+          <ka-icon name="add_circle" />
+        </ka-button>
       </div>
     </gk-container>
 
-    <modal :visible="modalVisible" @close="modalVisible = false">
+    <ka-modal :visible="modalVisible" @close="modalVisible = false">
       <depenses-add ref="add" @close="onAfterSubmit" :depense-edit="depenseEdit" />
       <template v-slot:footer>
-        <yotta-button type="success" @click="onSubmit">Submit</yotta-button>
+        <ka-button type="success" @click="onSubmit">Submit</ka-button>
       </template>
-    </modal>
-    <gk-popup :visible="popVisible" @close="popVisible = false">
+    </ka-modal>
+    <ka-popup :visible="popVisible" @close="popVisible = false">
       <div class="depenses__action-item" @click="handleOpen">Open</div>
       <div class="depenses__action-item" @click="handleEdit">Edit</div>
       <div class="depenses__action-item" @click="handleDelete">Delete</div>
-    </gk-popup>
+    </ka-popup>
   </div>
 </template>
 
@@ -75,16 +76,12 @@
 import 'swiper/css/swiper.css'
 import { DEPENSES_QUERY, DEPENSES_DELETE_MUTATION } from "@/graphql/depenses";
 import { SINGLE_CATEGORY_QUERY } from "@/graphql/categories";
-import GkContainer from '@/components/Reusable/GkContainer.vue';
-import DepensesItem from '@/components/Depenses/DepensesItem.vue';
-import Modal from '@/components/Reusable/Modal.vue';
 import DepensesAdd from '@/components/Depenses/DepensesAdd.vue';
-import YottaButton from '@/components/Reusable/Button'
-import YottaIcon from '@/components/Reusable/Icon'
+import DepensesItem from '@/components/Depenses/DepensesItem.vue';
+import GkContainer from '@/components/Reusable/GkContainer.vue';
 import { moneyFilter, dateTimeFilter } from '@/utils/filters'
 import { getMonthCount, getMonthFirstDay } from '@/utils/utils'
 import { MONTH_LIST } from '@/utils/constants'
-import GkPopup from '../components/Reusable/Popup.vue';
 import { Swiper, SwiperSlide } from 'vue-awesome-swiper'
 export default {
   name: 'Home',
@@ -92,13 +89,9 @@ export default {
     title: 'Home',
   },
   components: {
-    GkContainer,
-    DepensesItem,
-    Modal,
     DepensesAdd,
-    YottaButton,
-    YottaIcon,
-    GkPopup,
+    DepensesItem,
+    GkContainer,
     Swiper,
     SwiperSlide,
   },
@@ -159,6 +152,9 @@ export default {
     this.swiper.slideTo(3, 10, false)
   },
   computed: {
+    isLoading () {
+      return this.depenses.length === 0 && this.$apollo.loading
+    },
     monthsAfterOct2021 () {
       const count = getMonthCount("2021-11-01", new Date())
       const arr = []
@@ -232,7 +228,7 @@ export default {
       this.onDelete(this.depenseEdit)
     },
     async onDelete(item) {
-      console.log(`on delet: `, item)
+      // console.log(`on delet: `, item)
       try {
         await this.$apollo.mutate({
           mutation: DEPENSES_DELETE_MUTATION,
@@ -242,6 +238,7 @@ export default {
         })
         this.onAfterSubmit()
       } catch (error) {
+        // eslint-disable-next-line
         console.log(`delete error: `, error)
       }
     },

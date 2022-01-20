@@ -1,6 +1,7 @@
 <template>
   <div>
     <h1>currencies</h1>
+    <ka-app-loader v-if="isLoading" />
     <div>
       <div v-for="curr in currencies" :key="curr.id">{{ curr.name }}</div>
     </div>
@@ -24,6 +25,11 @@ export default {
   },
   apollo: {
     currencies: CURRENCIES_QUERY
+  },
+  computed: {
+    isLoading () {
+      return this.currencies.length === 0 && this.$apollo.loading
+    },
   },
 }
 </script>
