@@ -1,5 +1,6 @@
 export const LOGIN_TOKEN_NAME = "APP_TKN";
 export const REFRESH_TOKEN_NAME = "APP_RFR_TKN";
+export const SEEN_WELCOME = "KA:S_W:KA";
 
 export const MONTH_LIST = [
   "Jan:January",

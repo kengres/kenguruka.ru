@@ -29,7 +29,7 @@ export const checkUserInterceptor = async (to, __, next) => {
         next()
       }
     } catch (error) {
-      console.log(`error login: `, error)
+      // console.log(`error login: `, error)
       next(nav.passport.login)
     }
   } else {

@@ -1,31 +1,27 @@
 <template>
   <div class="login">
     <div class="login__item">
-      <yotta-input passport v-model.trim="username" placeholder="Email or phone..." />
+      <ka-input passport v-model.trim="username" placeholder="Email or phone..." />
     </div>
     <div class="login__item">
-      <yotta-input passport type="password" v-model.trim="password" placeholder="Password..." @keyup.enter="onLogin" />
+      <ka-input passport type="password" v-model.trim="password" placeholder="Password..." @keyup.enter="onLogin" />
     </div>
     <div class="login__item is-actions">
-      <yotta-btn type="primary" passport @click="onLogin" :disabled="formDisabled">Login</yotta-btn>
+      <ka-button type="primary" passport @click="onLogin" :disabled="formDisabled">Login</ka-button>
     </div>
     <div class="login__item is-actions">
-      <yotta-btn type="primary" passport :style="signupStyles" @click="$router.push('/passport/signup')">or Sign up</yotta-btn>
+      <ka-button type="primary" passport :style="signupStyles" @click="$router.push('/passport/signup')">or Sign up</ka-button>
     </div>
   </div>
 </template>
 
 <script>
-import YottaInput from '@/components/Reusable/Input'
-import YottaBtn from '@/components/Reusable/Button'
 import { LOG_USER_IN_MUTATION } from '@/graphql/users'
 import { onLogin } from '@/plugins/vue-apollo'
+import { SEEN_WELCOME } from '@/utils/constants'
+
 export default {
   name: 'PassportLogin',
-  components: {
-    YottaInput,
-    YottaBtn,
-  },
   data () {
     return {
       username: "",
@@ -42,6 +38,14 @@ export default {
     formDisabled () {
       return !this.username || !this.password
     },
+    seenWelcome () {
+      return localStorage.getItem(SEEN_WELCOME) === '1'
+    },
+  },
+  created () {
+    if (!this.seenWelcome) {
+      this.$router.push("/passport/welcome")
+    }
   },
   methods: {
     async onLogin () {
