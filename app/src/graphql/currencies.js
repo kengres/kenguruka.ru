@@ -6,23 +6,38 @@ export const CURRENCIES_QUERY = gql`
              id
              name
              abbreviation
+             isPrimary
+             rates {
+               id
+               currencyTo {
+                 id
+               }
+               amount
+             }
            }
          }
        `;
 
 export const CURRENCIES_CREATE_MUTATION = gql`
-         mutation CreateCurrency($name: String!, $abbreviation: String!) {
-           createCurrency(name: $name, abbreviation: $abbreviation) {
+         mutation CreateCurrency($name: String!, $abbreviation: String!, $isPrimary: Boolean, $rates: [RateInput]) {
+           createCurrency(name: $name, abbreviation: $abbreviation, isPrimary: $isPrimary, rates: $rates) {
              id
              name
              abbreviation
+             isPrimary
            }
          }
        `;
 
 export const CURRENCIES_UPDATE_MUTATION = gql`
-         mutation UpdateCurrency($id: ID!, $name: String, $abbreviation: String) {
-           updateCurrency(id: $id, name: $name, abbreviation: $abbreviation) {
+         mutation UpdateCurrency(
+           $id: ID!
+           $name: String
+           $abbreviation: String
+           $isPrimary: Boolean
+           $rates: [RateInput]
+         ) {
+           updateCurrency(id: $id, name: $name, abbreviation: $abbreviation, isPrimary: $isPrimary, rates: $rates) {
              id
              name
              abbreviation

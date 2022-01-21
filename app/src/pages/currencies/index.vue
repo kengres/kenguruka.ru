@@ -18,6 +18,18 @@
       <div class="currencies__form-item">
         <ka-input v-model="form.abbreviation" placeholder="ex Fbu..." />
       </div>
+      <div class="currencies__form-item">
+        <ka-switch v-model="form.isPrimary" label="Primary" />
+      </div>
+      <div class="currencies__form-item" v-show="form.isPrimary">
+        <h3 class="currencies__rate-title">Rates</h3>
+        <template v-for="rate in form.rates">
+          <div class="currencies__rate" :key="rate.currencyTo">
+            <div class="currencies__rate-label">{{getCurrencyName(rate.currencyTo)}}:</div>
+            <ka-input type="number" v-model="rate.amount" placeholder="ex. 230..." />
+          </div>
+        </template>
+      </div>
       <template v-slot:footer>
         <div class="currencies__footer">
           <ka-button type="success" @click="onSubmit">Submit</ka-button>
@@ -43,13 +55,21 @@ export default {
       modalVisible: false,
       form: {
         name: "",
-        abbreviation: ""
+        abbreviation: "",
+        isPrimary: false,
+        rates: []
       },
       currencyEdit: null,
     }
   },
   apollo: {
-    currencies: CURRENCIES_QUERY
+    currencies: {
+      query: CURRENCIES_QUERY,
+      update (data) {
+        data.currencies && this.updateRates(data.currencies)
+        return data.currencies
+      }
+    }
   },
   computed: {
     isLoading () {
@@ -58,13 +78,24 @@ export default {
     isEditMode () {
       return !!this.currencyEdit && !!this.currencyEdit.id
     },
+    getCurrencyName () {
+      return (id) => {
+        const item = this.currencies.find(i => i.id === id)
+        return item ? item.abbreviation : "currency"
+      }
+    },
   },
   methods: {
+    updateRates (currencies) {
+      this.form.rates = currencies.map(({ id }) => ({ amount: "", currencyTo: id }))
+    },
     async onSubmit () {
       const variables = {
         id: "",
         name: this.form.name,
         abbreviation: this.form.abbreviation,
+        isPrimary: this.form.isPrimary,
+        rates: this.form.isPrimary ? this.form.rates.map(i => ({ ...i, amount: +i.amount })) : [] // todo: validate
       };
       console.log('variables', variables);
       
@@ -89,6 +120,14 @@ export default {
       this.currencyEdit = currency
       this.form.name = currency.name
       this.form.abbreviation = currency.abbreviation
+      this.form.isPrimary = currency.isPrimary
+      this.form.rates = this.currencies.filter(i => i.id !== currency.id).map(curr => {
+        const exist = currency.rates.find(rate => rate.currencyTo.id === curr.id)
+        return {
+          amount: exist ? exist.amount : "",
+          currencyTo: curr.id,
+        }
+      })
       this.modalVisible = true
     },
     async onDelete () {
@@ -167,6 +206,25 @@ export default {
   &__footer {
     display: flex;
     column-gap: 20px;
+  }
+  &__rate {
+    margin-bottom: 16px;
+    display: flex;
+    column-gap: 12px;
+
+    &:last-of-type {
+      margin-bottom: 0;
+    }
+
+    &-title {
+      margin: 1.5rem 0;
+      text-align: center;
+    }
+
+    &-label {
+      min-width: 120px;
+      text-align: right;
+    }
   }
 }
 </style>

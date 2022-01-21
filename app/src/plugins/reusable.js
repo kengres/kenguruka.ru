@@ -10,6 +10,7 @@ import KaInput from "@/components/Reusable/Input";
 import KaModal from "@/components/Reusable/Modal";
 import KaPopup from "@/components/Reusable/Popup";
 import KaSelect from "@/components/Reusable/Select";
+import KaSwitch from "@/components/Reusable/Switch";
 import KaTextarea from "@/components/Reusable/Textarea";
 
 const Components = {
@@ -23,6 +24,7 @@ const Components = {
   KaModal,
   KaPopup,
   KaSelect,
+  KaSwitch,
   KaTextarea,
 };
 

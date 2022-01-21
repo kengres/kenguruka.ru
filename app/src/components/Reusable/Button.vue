@@ -6,7 +6,7 @@
 
 <script>
 export default {
-  name: 'YttButton',
+  name: 'KaButton',
   props: {
     type: {
       type: String,
@@ -158,10 +158,10 @@ export default {
     line-height: 15px;
 
     &.is-icon {
-      padding: 9px;
+      padding: 6px;
     }
     &.is-circle {
-      padding: 9px;
+      padding: 6px;
     }
   }
   &__spinner {

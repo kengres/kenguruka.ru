@@ -3,7 +3,7 @@ const { each: _each } = require("lodash")
 const { UserInputError, ForbiddenError } = require('apollo-server-express');
 
 module.exports = {
-  createCurrency: async (_p, { name, abbreviation }, { currentUser }) => {
+  createCurrency: async (_p, { name, abbreviation, isPrimary, rates }, { currentUser }) => {
     if (!currentUser) {
       throw new ForbiddenError("Unauthorized!");
     }
@@ -13,7 +13,9 @@ module.exports = {
     try {
       const newItem = new Currency({
         name,
+        rates,
         abbreviation,
+        isPrimary: !!isPrimary,
         createdBy: currentUser.id,
         updatedBy: currentUser.id,
       });
@@ -24,7 +26,7 @@ module.exports = {
       throw error;
     }
   },
-  updateCurrency: async (_p, { id, name, abbreviation }, { currentUser }) => {
+  updateCurrency: async (_p, { id, name, abbreviation, isPrimary, rates }, { currentUser }) => {
     if (!currentUser) {
       throw new ForbiddenError("Unauthorized!");
     }
@@ -41,7 +43,14 @@ module.exports = {
           item[key] = value;
         }
       });
-      item.updatedBy = currentUser.id
+
+      if (typeof isPrimary === "boolean") {
+        item.isPrimary = isPrimary;
+      }
+      
+      if (rates && rates.length > 0) {
+        item.rates = rates;
+      }
       return await item.save();
     } catch (error) {
       console.log("error create One:", error);

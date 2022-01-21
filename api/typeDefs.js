@@ -20,7 +20,7 @@ module.exports = gql`
     name: String!
     notes: String
     amount: Int
-    displayedAmount: String
+    # displayedAmount: String
     date: String
     currency: Currency
     category: Category
@@ -30,10 +30,18 @@ module.exports = gql`
     updatedBy: User
   }
 
+  type Rate {
+    id: ID!
+    amount: Float!
+    currencyTo: Currency!
+  }
+
   type Currency {
     id: ID!
     name: String!
     abbreviation: String
+    isPrimary: Boolean
+    rates: [Rate]
     createdAt: String
     updatedAt: String
     createdBy: User
@@ -53,6 +61,11 @@ module.exports = gql`
     userId: ID!
     token: String!
     refreshToken: String!
+  }
+
+  input RateInput {
+    currencyTo: ID!
+    amount: Float!
   }
 
   type Query {
@@ -82,11 +95,19 @@ module.exports = gql`
     # refreshTokens(token: String! refreshToken: String!): AuthData!
     # DEPENSES
     createDepense(name: String!, notes: String, amount: Int, currencyId: ID!, categoryId: ID, date: String): Depense
-    updateDepense(id: ID! name: String notes: String amount: Int currencyId: ID categoryId: ID date: String): Depense
+    updateDepense(
+      id: ID!
+      name: String
+      notes: String
+      amount: Int
+      currencyId: ID
+      categoryId: ID
+      date: String
+    ): Depense
     deleteDepense(id: ID!): Depense
     # CURRENCIES
-    createCurrency(name: String!, abbreviation: String!): Currency
-    updateCurrency(id: ID!, name: String, abbreviation: String): Currency
+    createCurrency(name: String!, abbreviation: String!, isPrimary: Boolean, rates: [RateInput]): Currency
+    updateCurrency(id: ID!, name: String, abbreviation: String, isPrimary: Boolean, rates: [RateInput]): Currency
     deleteCurrency(id: ID!): Currency
     # CATEGORIES
     createCategory(name: String!): Category

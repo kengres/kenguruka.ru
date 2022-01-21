@@ -12,7 +12,7 @@
 
 <script>
 export default {
-  name: 'YttInput',
+  name: 'KaInput',
   inheritAttrs: false,
   props: {
     value: {

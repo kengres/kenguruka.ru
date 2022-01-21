@@ -84,24 +84,6 @@ module.exports = {
       return null;
     }
   },
-  displayedAmount: async (_parent, _input) => {
-    // if (!currentUser) return null
-    try {
-      if (_parent.currency) {
-        if (isInstance(_parent.currency, Currency)) {
-          return `${_parent.amount} ${_parent.currency.abbreviation}`;
-        }
-        if (isValidObjectId(_parent.currency)) {
-          const currency = await Currency.findById(_parent.currency);
-          return `${_parent.amount} ${currency.abbreviation}`;
-        }
-      }
-      return null;
-    } catch (error) {
-      console.log(`error created by: `, error);
-      return null;
-    }
-  },
   updatedBy: async (_parent, _input, { currentUser }) => {
     if (!currentUser) return null;
     if (_parent.updatedBy) {

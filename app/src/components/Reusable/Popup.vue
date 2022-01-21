@@ -15,7 +15,7 @@
 
 <script>
 export default {
-  name: "GkPopup",
+  name: "KaPopup",
   props: {
     visible: {
       type: Boolean,

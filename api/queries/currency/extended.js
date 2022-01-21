@@ -15,38 +15,38 @@ const isInstance = (obj, Model) => obj instanceof Model
 
 module.exports = {
   createdAt: (parent, input, ctx) => {
-    return dateToString(parent.createdAt)
+    return dateToString(parent.createdAt);
   },
   updatedAt: (parent, input, ctx) => {
-    return dateToString(parent.updatedAt)
+    return dateToString(parent.updatedAt);
   },
   createdBy: async (_parent, _input, { currentUser }) => {
     // if (!currentUser) return null
     try {
       if (_parent.createdBy) {
         if (isInstance(_parent.createdBy, User)) {
-          return _parent.createdBy
+          return _parent.createdBy;
         }
         if (isValidObjectId(_parent.createdBy)) {
-          return await User.findById(_parent.createdBy)
+          return await User.findById(_parent.createdBy);
         }
       }
-      return null
+      return null;
     } catch (error) {
-      console.log(`error created by: `, error)
-      return null
+      console.log(`error created by: `, error);
+      return null;
     }
   },
   updatedBy: async (_parent, _input, { currentUser }) => {
-    if (!currentUser) return null
+    if (!currentUser) return null;
     if (_parent.updatedBy) {
       if (isInstance(_parent.updatedBy, User)) {
-        return _parent.updatedBy
+        return _parent.updatedBy;
       }
       if (isValidObjectId(_parent.updatedBy)) {
-        return await User.findById(_parent.updatedBy)
+        return await User.findById(_parent.updatedBy);
       }
     }
-    return null
+    return null;
   },
-}
+};
