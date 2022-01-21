@@ -4,7 +4,7 @@ import LayoutDefault from '../layouts/Default.vue'
 import PassportLayout from "../layouts/Passport.vue";
 import Home from '../pages'
 import DepenseId from '../pages/_depenseId/index.vue'
-import Currencies from '../pages/Currencies.vue'
+import Currencies from '../pages/currencies/index.vue'
 import Categories from '../pages/categories/index.vue'
 import Settings from "../pages/settings/index.vue";
 import { checkUserInterceptor } from './interceptors';
