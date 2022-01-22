@@ -33,7 +33,7 @@ export default {
   &__links {
     display: flex;
     column-gap: 16px;
-    padding: 12px;
+    padding: 20px 16px 12px;
     overflow-x: auto;
     // * HIDE SCROLLBAR
     -ms-overflow-style: none;

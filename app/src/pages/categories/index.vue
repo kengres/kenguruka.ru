@@ -9,15 +9,20 @@
       </template>
     </ul>
     <div class="categories__add" v-show="!modalVisible">
-      <add-button @click="modalVisible = true" />
+      <ka-button @click="modalVisible = true" type="primary" icon circle>
+        <ka-icon name="add_circle" />
+      </ka-button>
     </div>
 
     <ka-modal :visible="modalVisible" @close="modalVisible = false">
-      <ka-input v-model="categoryName" />
+      <ka-alert outlined type="warning" canClose v-show="error" class="mb-16">
+        <p>{{ error | formatGraphqlError }}</p>
+      </ka-alert>
+      <ka-input v-model="categoryName" placeholder="category name...." @keyup.enter="onSubmit" />
       <template v-slot:footer>
         <div class="categories__footer">
-          <ka-button type="success" @click="onSubmit">submit</ka-button>
-          <ka-button type="danger" @click="onDelete" v-if="isEditMode">delete</ka-button>
+          <ka-button type="success" @click="onSubmit" :disabled="!categoryName">Submit</ka-button>
+          <ka-button type="danger" @click="onDelete" v-if="isEditMode">Delete</ka-button>
         </div>
       </template>
     </ka-modal>
@@ -26,22 +31,19 @@
 
 <script>
 import { CATEGORIES_QUERY, CATEGORIES_CREATE_MUTATION, CATEGORIES_UPDATE_MUTATION, CATEGORIES_DELETE_MUTATION } from '@/graphql/categories';
-import AddButton from '../../components/Reusable/AddButton.vue';
 export default {
   name: "Categories",
   metaInfo: {
     title: 'Categories',
   },
-  components: {
-    AddButton,
-  },
   data () {
     return {
       categories: [],
-      colors: ['green', 'violet', 'orange', 'blue', 'purple', 'yellow'],
+      colors: ['green', 'blue', 'orange', 'violet', 'green2', 'yellow', 'purple', 'violet2', 'orange2', 'blue2', 'purple2', 'yellow2'],
       modalVisible: false,
       categoryName: "",
       categoryEdit: null,
+      error: "",
     }
   },
   apollo: {
@@ -62,13 +64,14 @@ export default {
   },
   methods: {
     async onSubmit () {
+      this.error = ""
       const variables = {
+        id: "",
         name: this.categoryName && this.categoryName.trim(),
       };
       if (this.isEditMode) {
         variables.id = this.categoryEdit.id;
       }
-      // console.log(`newItem: `, variables);
       try {
         await this.$apollo.mutate({
           mutation: this.isEditMode ?  CATEGORIES_UPDATE_MUTATION : CATEGORIES_CREATE_MUTATION,
@@ -82,8 +85,7 @@ export default {
         this.categoryEdit = null
         this.refetch()
       } catch (error) {
-        // eslint-disable-next-line
-        console.log(`error add: `, error);
+        this.error = error.message
       }
     },
     async onDelete () {
@@ -101,11 +103,11 @@ export default {
         this.categoryEdit = null
         this.refetch()
       } catch (error) {
-        // eslint-disable-next-line
-        console.log(`error add: `, error);
+        this.error = error.message;
       }
     },
     onUpdateStart (cat) {
+      this.error = ""
       this.categoryEdit = cat
       this.categoryName = cat.name
       this.modalVisible = true
@@ -126,16 +128,18 @@ export default {
     margin-bottom: 12px;
   }
   &__list {
+    --gap-size: 16px;
     list-style: none;
     padding: 0;
     display: flex;
-    justify-content: center;
     align-items: center;
     flex-wrap: wrap;
-    gap: 24px;
+    gap: 16px;
+    padding-left: var(--gap-size);
+    padding-right: var(--gap-size);
   }
   &__item {
-    width: calc(50% - 24px);
+    width: calc(50% - var(--gap-size) / 2);
     color: #010101;
     height: 100px;
     display: flex;
@@ -144,9 +148,8 @@ export default {
     position: relative;
     font-weight: 700;
     font-size: 18px;
-    letter-spacing: 1px;
     border-radius: 10px;
-    text-transform: capitalize;
+    padding: 16px;
     &::before {
       content: "";
       background-color: currentColor;
@@ -155,7 +158,7 @@ export default {
       right: 0;
       bottom: 0;
       left: 0;
-      opacity: 0.2;
+      opacity: 0.12;
       border-radius: inherit;
     }
     &.is-green {
@@ -165,16 +168,34 @@ export default {
       color: rgb(204, 38, 204);
     }
     &.is-orange {
-      color: orange;
+      color: rgb(226, 152, 13);
     }
     &.is-blue {
       color: rgb(13, 13, 208);
     }
     &.is-purple {
-      color: rgb(102, 11, 135);
+      color: rgb(157, 6, 162);
     }
     &.is-yellow {
       color: rgb(187, 187, 7);
+    }
+    &.is-green2 {
+      color: rgb(15, 191, 35);
+    }
+    &.is-violet2 {
+      color: rgb(128, 12, 128);
+    }
+    &.is-orange2 {
+      color: rgb(159, 106, 7);
+    }
+    &.is-blue2 {
+      color: rgb(10, 10, 138);
+    }
+    &.is-purple2 {
+      color: rgb(75, 5, 101);
+    }
+    &.is-yellow2 {
+      color: rgb(169, 235, 15);
     }
   }
   &__add {

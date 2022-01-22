@@ -124,14 +124,12 @@ export default {
         username: this.username,
         password: this.password,
       }
-      // console.log(`variables`, variables)
       try {
         this.loading = true;
         await this.$apollo.mutate({
           mutation: CREATE_ACCOUNT_MUTATION,
           variables
         })
-        // console.log('data', data);
         this.handleShowCode()
       } catch (error) {
         this.error = error.message
@@ -140,12 +138,10 @@ export default {
       }
     },
     async onVerifyCode () {
-      // console.log(`verify`)
       const obj = {
         username: this.username,
         code: `${this.code.slice(0, 3)}-${this.code.slice(3)}`,
       }
-      // console.log('obj', obj);
       try {
         this.isLoading = true
         const { data } = await this.$apollo.mutate({
@@ -155,11 +151,9 @@ export default {
         const { token, refreshToken } = data.verifyCode
         await onLogin(this.$apolloProvider.defaultClient, token, refreshToken);
         if (this.firstLogin) {
-          // console.log(`first signup...`)
           localStorage.setItem("U:FL:U", 1)
           this.$router.push(`/?ac=frst-lgn`)
         } else {
-          // console.log(`not first signup...`)
           this.$router.push(`/`)
         }
       } catch (error) {

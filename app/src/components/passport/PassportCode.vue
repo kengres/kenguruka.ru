@@ -113,7 +113,6 @@ export default {
     handleCodeChange(val, index) {
       let code = this.value.slice()
       code = `${code.slice(0, index)}${val}`.slice(0, this.length)
-      // console.log(`[handleCodeChange] code:`, code)
       const thisInput = this.$refs[`code${index}`]
       const nextInput = this.$refs[`code${index + 1}`]
       if (nextInput && nextInput.$el) {

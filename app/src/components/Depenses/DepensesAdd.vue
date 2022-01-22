@@ -1,22 +1,22 @@
 <template>
   <div class="depenses-add">
     <div class="depenses-add__item">
-      <ka-input v-model.trim="form.name" />
+      <ka-input v-model.trim="form.name" placeholder="What did you buy..." />
     </div>
     <div class="depenses-add__item">
-      <ka-input type="number" v-model="form.amount" />
+      <ka-input type="number" v-model="form.amount" placeholder="For how much..." />
     </div>
     <div class="depenses-add__item">
-      <ka-select :options="categories" v-model="form.category" label="name" />
+      <ka-select :options="categories" v-model="form.category" label="name" placeholder="Category..." />
     </div>
     <div class="depenses-add__item">
-      <ka-select :options="currencies" v-model="form.currency" label="abbreviation" />
+      <ka-select :options="currencies" :can-clear="false" v-model="form.currency" label="abbreviation" placeholder="Currency..." />
     </div>
     <div class="depenses-add__item">
       <input class="depenses-add__datetime" type="datetime-local" min="2021-10-01T00:00" :max="`${thisYear}-12-31T00:00`" v-model="form.date" />
     </div>
     <div class="depenses-add__item">
-      <ka-textarea v-model.trim="form.notes" />
+      <ka-textarea v-model.trim="form.notes" placeholder="Notes..." />
     </div>
   </div>
 </template>
@@ -39,7 +39,7 @@ export default {
     return {
       form: {
         name: "",
-        amount: 0,
+        amount: "",
         currency: "",
         category: "",
         date: formtDateToLocal(new Date()),
@@ -83,7 +83,6 @@ export default {
   },
   methods: {
     updateForm (isEdit) {
-      console.log(`isEditMode watch: `, isEdit)
       if (isEdit) {
         this.form.name = this.depenseEdit.name;
         this.form.amount = this.depenseEdit.amount;
@@ -95,6 +94,7 @@ export default {
     },
     async onSubmit() {
       const variables = {
+        id: "",
         name: this.form.name && this.form.name.trim(),
         amount: +this.form.amount,
         currencyId: this.form.currency && this.form.currency.id,
@@ -105,7 +105,6 @@ export default {
       if (this.isEditMode) {
         variables.id = this.depenseEdit.id;
       }
-      console.log(`newItem: `, variables);
       try {
         await this.$apollo.mutate({
           mutation: this.isEditMode ? DEPENSES_UPDATE_MUTATION : DEPENSES_ADD_MUTATION,
@@ -113,6 +112,7 @@ export default {
         })
         this.$emit('close')
       } catch (error) {
+        // eslint-disable-next-line
         console.log(`error add: `, error);
       }
     }

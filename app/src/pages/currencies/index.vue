@@ -9,7 +9,9 @@
       </li>
     </ul>
     <div class="currencies__add" v-show="!modalVisible">
-      <add-button @click="modalVisible = true" />
+      <ka-button @click="modalVisible = true" type="primary" icon circle>
+        <ka-icon name="add_circle" />
+      </ka-button>
     </div>
 
     <ka-modal :visible="modalVisible" @close="onModalClose">
@@ -100,10 +102,9 @@ export default {
         id: "",
         name: this.form.name,
         abbreviation: this.form.abbreviation,
-        isPrimary: this.form.isPrimary,
+        isPrimary: this.currencies.length <= 1 || this.form.isPrimary,
         rates: this.form.isPrimary ? this.form.rates.map(i => ({ ...i, amount: +i.amount })) : [] // todo: validate
       };
-      console.log('variables', variables);
       
       if (this.isEditMode) {
         variables.id = this.currencyEdit.id;
@@ -200,10 +201,13 @@ export default {
   }
   &__add {
     position: fixed;
-    bottom: 40px;
-    right: 20px;
+    bottom: 50px;
+    right: 0px;
     font-size: 36px;
     z-index: 100;
+    padding: 10px;
+    background-color: var(--color-layout);
+    border-radius: 50%;
   }
   &__form-item {
     margin-bottom: 16px;

@@ -47,7 +47,6 @@ export default {
       !this.disabled && this.handleChange()
     },
     handleChange() {
-      // console.log(`input change: `)
       this.$emit('input', !this.value)
       this.$emit('change', !this.value)
     },

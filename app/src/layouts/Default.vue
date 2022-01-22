@@ -22,7 +22,7 @@ export default {
 
 <style lang="scss" scoped>
 .layout {
-  background: #fff;
+  background: var(--color-layout);
   min-height: 100vh;
   max-width: 400px;
   margin: 0 auto;

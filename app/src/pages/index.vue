@@ -261,7 +261,6 @@ export default {
       this.onDelete(this.depenseEdit)
     },
     async onDelete(item) {
-      // console.log(`on delet: `, item)
       try {
         await this.$apollo.mutate({
           mutation: DEPENSES_DELETE_MUTATION,
@@ -298,19 +297,15 @@ export default {
       const activeMonth = new Date(new Date(this.activeMonth).setDate(1)).setHours(0, 0, 0, 0)
       const todayMonth = new Date(new Date().setDate(1)).setHours(0, 0, 0, 0)
       if (activeMonth === todayMonth && depenses.length === 0) {
-        console.log(`get counts...`)
         try {
           if (this.$apollo.queries.userCounts) {
-            console.log(`refetching: `, this.$apollo.queries.userCounts)
             return this.$apollo.queries.userCounts.refetch()
           }
-          const { data } = await this.$apollo.addSmartQuery('userCounts', {
+          await this.$apollo.addSmartQuery('userCounts', {
             query: USER_COUNTS_QUERY,
-            // pollInterval: 300
           })
-          console.log(`data: `, data)
-          // this.userCounts = data.userCounts
         } catch (error) {
+          // eslint-disable-next-line
           console.log('error', error);
         }
       }

@@ -11,6 +11,13 @@ module.exports = {
       throw new UserInputError("Invalid Data! name is required!");
     }
     try {
+      const exist = await Category.exists({
+        name,
+        createdBy: currentUser.id
+      });
+      if (exist) {
+        throw new UserInputError('Category with same name exits!')
+      }
       const newItem = new Category({
         name,
         createdBy: currentUser.id,
