@@ -1,5 +1,10 @@
 <template>
   <div class="login">
+    <div class="login__error" v-if="error">
+      <ka-alert outlined type="warning" canClose>
+        <p>{{ error | formatGraphqlError }}</p>
+      </ka-alert>
+    </div>
     <div class="login__item">
       <ka-input passport v-model.trim="username" placeholder="Email or phone..." />
     </div>
@@ -26,6 +31,7 @@ export default {
     return {
       username: "",
       password: "",
+      error: ""
     }
   },
   computed: {
@@ -49,6 +55,7 @@ export default {
   },
   methods: {
     async onLogin () {
+      this.error = ""
       const variables = {
         username: this.username,
         password: this.password,
@@ -71,7 +78,7 @@ export default {
       } catch (error) {
         // eslint-disable-next-line
         console.log(`error: `, error)
-        this.errorLogin = error.message
+        this.error = error.message
       } finally {
         this.loading = false;
       }
@@ -82,6 +89,9 @@ export default {
 
 <style lang="scss" scoped>
 .login {
+  &__error {
+    margin-bottom: 16px;
+  }
   &__item {
     margin-bottom: 32px;
     &:last-of-type {

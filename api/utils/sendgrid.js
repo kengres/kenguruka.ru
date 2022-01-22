@@ -20,15 +20,15 @@ const getUserMessage = (email, code) => {
   `
   return {
     to: [email],
-    from: 'no-reply@kando.bi',
+    from: "no-reply@kando.bi",
     // bcc: ['kenguruka24@gmail.com'],
-    subject: `Kando CRM - code de confirmation: ${code}`,
+    subject: `Kando Finances - code de confirmation: ${code}`,
     text: `
       Voici votre code de confirmation \n
       ${code}
     `,
     html,
-  }
+  };
 }
 
 
@@ -37,7 +37,7 @@ const sendEmail = (email, code) => {
   return new Promise(async(resolve, reject) => {
     // console.log('[SENDGRID] sending...', email)
     try {
-      const msg = getUserMessage(email, code)
+      const msg = getUserMessage(email, code.toLowerCase());
       // console.log('[SENDGRID] message to send: ', msg)
       await sendgridMail.send(msg);
       return resolve()

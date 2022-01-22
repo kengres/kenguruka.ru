@@ -1,25 +1,16 @@
-import { MONTH_LIST } from './constants'
+import { MONTH_LIST } from "./constants";
 
 export const addLeadingZero = (val) => (val < 10 ? `0${val}` : val);
 
 const isDateToday = (val) => {
-  return (
-    !!val &&
-    new Date(val).setHours(0, 0, 0, 0) === new Date().setHours(0, 0, 0, 0)
-  );
+  return !!val && new Date(val).setHours(0, 0, 0, 0) === new Date().setHours(0, 0, 0, 0);
 };
 const isDateYesterday = (val) => {
-  return (
-    !!val &&
-    new Date(val).setHours(0, 0, 0, 0) === new Date().setHours(-24, 0, 0, 0)
-  );
+  return !!val && new Date(val).setHours(0, 0, 0, 0) === new Date().setHours(-24, 0, 0, 0);
 };
 
 const isDateThisYear = (val) => {
-  return (
-    !!val &&
-    new Date(val).getFullYear() === new Date().getFullYear()
-  );
+  return !!val && new Date(val).getFullYear() === new Date().getFullYear();
 };
 
 export const moneyFilter = (val) => {
@@ -55,4 +46,13 @@ export const dateTimeFilter = (val) => {
   }
 
   return dateStr;
+};
+
+export const formatGraphqlError = (str = "") => {
+  if (!str) return "";
+  const grphStr = "GraphQL error: ";
+  if (str.startsWith(grphStr)) {
+    return str.slice(grphStr.length);
+  }
+  return str;
 };

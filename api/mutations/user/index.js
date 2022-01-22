@@ -10,6 +10,7 @@ const token_key = process.env.TOKEN_STRING_SECRET;
 const refresh_token_key = process.env.REFRESH_TOKEN_STRING_SECRET;
 const tokenExpTime = "7d";
 const refreshTokenExpTime = "14d";
+const verifyCodeExpTime = 1000 * 60 * (2 + 0.6);
 
 module.exports = {
   createAccount: async (__, { name, username, password }) => {
@@ -58,13 +59,14 @@ module.exports = {
             verificationEmailSent: true,
             verificationCode: uniqCode,
             codeIat: Math.floor(Date.now() / 1000),
-            codeExpAt: Date.now() + (2 + 0.5) * 60 * 1000,
+            codeExpAt: Date.now() + verifyCodeExpTime,
           };
         } catch (error) {
           newUser.stats = {
             ...newUser.stats,
             verificationEmailSent: false,
             verificationEmailError: error && error.toString(),
+            codeExpAt: 0,
           };
         }
       }
@@ -77,13 +79,14 @@ module.exports = {
             verificationPhoneSent: true,
             verificationSms: uniqCode,
             codeSmsIat: Math.floor(Date.now() / 1000),
-            codeSmsExpAt: Date.now() + (2 + 0.5) * 60 * 1000,
+            codeSmsExpAt: Date.now() + verifyCodeExpTime,
           };
         } catch (error) {
           newUser.stats = {
             ...newUser.stats,
             verificationPhoneSent: false,
             verificationPhoneError: error && error.toString(),
+            codeExpAt: 0,
           };
         }
       }
@@ -125,16 +128,11 @@ module.exports = {
         console.log(`[verifyCode] verificationEmailSent`, verificationEmailSent);
         console.log(`[verifyCode] verificationCode`, verificationCode);
         console.log(`[verifyCode] codeExpAt`, new Date(codeExpAt).toISOString());
+        console.log(`[verifyCode] code`, code);
+        console.log(`[verifyCode] time`, codeExpAt <= Date.now());
 
         if (!verificationEmailSent || verificationCode !== code || codeExpAt <= Date.now()) {
-          user.stats = {
-            ...user.stats,
-            verificationCode: "",
-            codeIat: "",
-            codeExpAt: 0,
-          };
-          await user.save();
-          throw new UserInputError("Invalid credentials!");
+          throw new UserInputError("Invalid code!");
         }
         user.verified = true;
         user.verifiedAt = Date.now();
@@ -156,7 +154,7 @@ module.exports = {
             codeSmsExpAt: 0,
           };
           await user.save();
-          throw new UserInputError("Invalid credentials!");
+          throw new UserInputError("Invalid code!");
         }
         user.verified = true;
         user.stats = {
@@ -213,14 +211,15 @@ module.exports = {
     // * MODE
     const isPhoneMode = isValidPhone(username);
     const isEmailMode = !isPhoneMode && isValidEmail(username);
+    const modeText = isPhoneMode ? "phone number" : "email";
     if (!isPhoneMode && !isEmailMode) {
-      throw new UserInputError(`Invalid email or password!`);
+      throw new UserInputError(`Invalid ${modeText} or password!`);
     }
 
     try {
       const user = await User.findOne({ username });
       if (!user || !user.verified) {
-        throw new UserInputError("Invalid Email or Password!");
+        throw new UserInputError(`Invalid ${modeText} or password!`);
       }
       if (!user.active) {
         throw new ForbiddenError("Not Authorized!");
@@ -229,7 +228,7 @@ module.exports = {
       const pwdMatch = await bcrypt.compare(password, user._doc.password);
       if (!pwdMatch) {
         console.log(`password don't match...`);
-        throw new UserInputError("Invalid Email or Password");
+        throw new UserInputError(`Invalid ${modeText} or password`);
       }
       const token = jwt.sign(
         {

@@ -10,9 +10,9 @@ const sendSmsCodeToClient = (phone, code) => {
     try {
       const message = await client.messages.create({
         to: transformPhone(phone),
-        from: '+12564149511',
-        body: `Votre code de securite Kando: ${code}`,
-      })
+        from: "+12564149511",
+        body: `Votre code de securite Kando: ${code.toLowerCase()}`,
+      });
       console.log(`[sendSms] message sent: `, message)
       console.log(`[sendSms] message sid: `, message.sid)
       resolve()

@@ -15,6 +15,20 @@ module.exports = {
       throw error;
     }
   },
+  user: async (__, { id }, { currentUser }) => {
+    // if (!currentUser || !currentUser.roles.includes("ADMIN")) {
+    //   throw new ForbiddenError("Unauthorized!");
+    // }
+    if (!currentUser) {
+      throw new ForbiddenError("Unauthorized!");
+    }
+    try {
+      const user = await User.findById(id);
+      return user;
+    } catch (error) {
+      throw error;
+    }
+  },
   userCounts: async (__, ___, { currentUser }) => {
     if (!currentUser || !currentUser.active) {
       throw new ForbiddenError("Unauthorized!");

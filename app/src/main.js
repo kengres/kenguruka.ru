@@ -6,6 +6,7 @@ import './registerServiceWorker'
 import router from './router'
 import { createProvider } from './plugins/vue-apollo'
 import "./plugins/reusable";
+import "./plugins/filters";
 
 Vue.config.productionTip = false
 

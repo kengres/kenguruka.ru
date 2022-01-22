@@ -70,6 +70,7 @@ module.exports = gql`
 
   type Query {
     me: User
+    user(id: ID!): User
     # me @client: User
     users: [User!]!
     userCounts: JSON

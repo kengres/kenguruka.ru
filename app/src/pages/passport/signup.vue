@@ -1,16 +1,16 @@
 <template>
   <div class="signup">
+    <div class="signup__item" v-if="error">
+      <ka-alert type="warning" outlined canClose>
+        <p style="font-size: 14px">{{ error | formatGraphqlError }}</p>
+      </ka-alert>
+    </div>
     <template v-if="!codeMode">
-      <div class="signup__item" v-if="error">
-        <ka-alert type="warning" outlined canClose>
-          <p style="font-size: 14px">{{ error | formatError }}</p>
-        </ka-alert>
-      </div>
       <div class="signup__item">
         <ka-input passport v-model.trim="name" placeholder="Name..." />
       </div>
       <div class="signup__item">
-        <ka-input :type="usernameType" passport v-model.trim="username" placeholder="Email or phone..." />
+        <ka-input type="email" passport v-model.trim="username" placeholder="Email or phone..." />
       </div>
       <div class="signup__item">
         <ka-input passport type="password" v-model.trim="password" placeholder="Password..." />
@@ -27,7 +27,10 @@
       <div class="signup__code-inputs">
         <passport-code v-model="code" @submit="onVerifyCode" :disabled="isLoading" />
       </div>
-      <div class="signup__code-expires">Code will expire in {{ remainingTime | formatCodeTime }}</div>
+      <div class="signup__code-expires" v-if="remainingTime">Code will expire in {{ remainingTime | formatCodeTime }}</div>
+      <div class="signup__code-expires" v-else>
+        <ka-button @click="onSignup">Resend code</ka-button>
+      </div>
       <div class="signup__code-alert">
         <ka-alert type="warning" flat outlined>
           <h3>Don't see an email?</h3>
@@ -61,13 +64,6 @@ export default {
       }
       return `${fillZero(minutes)}:${fillZero(seconds)}`
     },
-    formatError (str = "") {
-      if (!str) return ""
-      if (str.startsWith('GraphQL error: ')) {
-        return str.slice('GraphQL error: '.length)
-      }
-      return str
-    }
   },
   data () {
     return {
@@ -121,6 +117,8 @@ export default {
       }, 1000)
     },
     async onSignup () {
+      this.error = ""
+      this.code = ""
       const variables = {
         name: this.name,
         username: this.username,
@@ -136,7 +134,6 @@ export default {
         // console.log('data', data);
         this.handleShowCode()
       } catch (error) {
-        console.log(`error: `, error)
         this.error = error.message
       } finally {
         this.loading = false;
@@ -166,6 +163,8 @@ export default {
           this.$router.push(`/`)
         }
       } catch (error) {
+        this.error = error.message
+        this.code = ""
         this.isLoading = false
       }
     },
