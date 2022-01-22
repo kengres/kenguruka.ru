@@ -18,6 +18,7 @@ import SelectClear from "@/components/Select/SelectClear"
 import SelectIndicator from "@/components/Select/SelectIndicator"
 
 export default {
+  name: "KaSelect",
   components: {
     VueSelect,
   },

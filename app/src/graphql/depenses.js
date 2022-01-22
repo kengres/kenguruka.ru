@@ -16,7 +16,6 @@ export const DEPENSES_QUERY = gql`
                name
                abbreviation
              }
-             displayedAmount
              createdAt
              updatedAt
            }
@@ -41,7 +40,6 @@ export const SINGLE_DEPENSE_QUERY = gql`
                name
                abbreviation
              }
-             displayedAmount
              createdAt
              updatedAt
            }
@@ -69,7 +67,6 @@ export const DEPENSES_ADD_MUTATION = gql`
       name
       amount
       date
-      displayedAmount
       createdAt
       updatedAt
     }
@@ -101,7 +98,6 @@ export const DEPENSES_UPDATE_MUTATION = gql`
              amount
              date
              notes
-             displayedAmount
              createdAt
              updatedAt
            }

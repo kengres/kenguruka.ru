@@ -6,7 +6,7 @@
 
 <script>
 export default {
-  name: 'YttButton',
+  name: 'KaButton',
   props: {
     type: {
       type: String,
@@ -158,10 +158,10 @@ export default {
     line-height: 15px;
 
     &.is-icon {
-      padding: 9px;
+      padding: 6px;
     }
     &.is-circle {
-      padding: 9px;
+      padding: 6px;
     }
   }
   &__spinner {
@@ -191,6 +191,11 @@ export default {
 .is-success {
   background-color: var(--color-success);
   border-color: var(--color-success--light);
+  color: #fff;
+}
+.is-warning {
+  background-color: var(--color-warning);
+  border-color: var(--color-warning--light);
   color: #fff;
 }
 .is-info {

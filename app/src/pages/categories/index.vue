@@ -2,6 +2,7 @@
   <div class="categories">
     <h1 class="categories__title">Categories</h1>
     <ka-app-loader v-if="isLoading" />
+    <ka-app-empty v-if="!isLoading && categories.length === 0" />
     <ul class="categories__list">
       <template v-for="(cat, i) in categories">
         <li :class="['categories__item', `is-${colors[i % colors.length]}`]" :key="cat.id" @click="onUpdateStart(cat)">{{ cat.name }}</li>
@@ -54,6 +55,11 @@ export default {
       return this.categories.length === 0 && this.$apollo.loading
     },
   },
+  created () {
+    if (this.$route.query.add === "1") {
+      this.modalVisible = true
+    }
+  },
   methods: {
     async onSubmit () {
       const variables = {
@@ -69,6 +75,9 @@ export default {
           variables
         })
         this.modalVisible = false
+        if (this.$route.query.back === "1") {
+          return this.$router.back()
+        }
         this.categoryName = ""
         this.categoryEdit = null
         this.refetch()

@@ -5,7 +5,9 @@
         <div class="modal__header">
           <slot name="header"></slot>
           <div class="modal__close">
-            <yotta-button icon @click="$emit('close')">close</yotta-button>
+            <ka-button size="xs" icon circle raised type="primary" @click="$emit('close')">
+              <ka-icon name="close" :size="18" />
+            </ka-button>
           </div>
         </div>
         <div class="modal__body">
@@ -20,10 +22,8 @@
 </template>
 
 <script>
-import YottaButton from './Button'
 export default {
   name: "Modal",
-  components: { YottaButton },
   props: {
     visible: {
       type: Boolean,
@@ -42,6 +42,7 @@ export default {
 
 <style lang="scss">
 .modal {
+  --padding-size: 1rem;
   position: fixed;
   top: 0;
   left: 0;
@@ -54,24 +55,26 @@ export default {
 
   &__inner {
     background-color: #fff;
-    max-width: 500px;
-    width: 95%;
+    max-width: 600px;
+    width: 99%;
     margin: 0 auto;
-    margin-top: 15vh;
+    margin-top: 5vh;
     border-radius: 6px;
     box-shadow: 2px 2px 6px 1px rgba(0, 0, 0, 0.15);
     position: relative;
   }
 
-  &__header,
-  &__footer,
-  &__body {
-    padding: 1.2rem;
+  &__header {
+    padding: 1.25rem var(--padding-size);
   }
   &__close {
     position: absolute;
-    top: 1rem;
-    right: 1rem;
+    top: 5px;
+    right: 5px;
+  }
+  &__footer,
+  &__body {
+    padding: 16px var(--padding-size);
   }
   &__footer {
     border-top: 1px solid #f3f7a2;

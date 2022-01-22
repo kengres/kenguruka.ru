@@ -86,7 +86,7 @@ const getPath = name => {
   }
 }
 export default {
-  name: "YottaIcon",
+  name: "KaIcon",
   props: {
     name: {
       type: String,

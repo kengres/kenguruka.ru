@@ -2,6 +2,8 @@ import Vue from "vue";
 
 // Reusable
 import AddButton from "@/components/Reusable/AddButton";
+import KaAlert from "@/components/Reusable/Alert";
+import KaAppEmpty from "@/components/Reusable/AppEmpty";
 import KaAppLoader from "@/components/Reusable/AppLoader";
 import KaButton from "@/components/Reusable/Button";
 import KaIcon from "@/components/Reusable/Icon";
@@ -9,11 +11,14 @@ import KaInput from "@/components/Reusable/Input";
 import KaModal from "@/components/Reusable/Modal";
 import KaPopup from "@/components/Reusable/Popup";
 import KaSelect from "@/components/Reusable/Select";
+import KaSwitch from "@/components/Reusable/Switch";
 import KaTextarea from "@/components/Reusable/Textarea";
 
 const Components = {
   // Reusable
   AddButton,
+  KaAlert,
+  KaAppEmpty,
   KaAppLoader,
   KaButton,
   KaIcon,
@@ -21,6 +26,7 @@ const Components = {
   KaModal,
   KaPopup,
   KaSelect,
+  KaSwitch,
   KaTextarea,
 };
 

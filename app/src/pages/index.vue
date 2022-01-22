@@ -51,7 +51,16 @@
           </li>
         </ul>
       </section>
-      <div class="depenses__add">
+      <section class="depenses__welcome" v-if="showAddExpenses">
+        <depenses-welcome
+          @addCurrency="$router.push('/currencies?add=1&back=1')"
+          @addCategory="$router.push('/categories?add=1&back=1')"
+          :can-add-category="showAddCategory"
+          :can-add-currency="showAddCurrency"
+          :can-add-depense="showPlusButton"
+        />
+      </section>
+      <div class="depenses__add" v-show="showPlusButton">
         <ka-button @click="onAdd" type="primary" icon circle>
           <ka-icon name="add_circle" />
         </ka-button>
@@ -75,6 +84,7 @@
 <script>
 import 'swiper/css/swiper.css'
 import { DEPENSES_QUERY, DEPENSES_DELETE_MUTATION } from "@/graphql/depenses";
+import { USER_COUNTS_QUERY } from "@/graphql/users";
 import { SINGLE_CATEGORY_QUERY } from "@/graphql/categories";
 import DepensesAdd from '@/components/Depenses/DepensesAdd.vue';
 import DepensesItem from '@/components/Depenses/DepensesItem.vue';
@@ -83,6 +93,7 @@ import { moneyFilter, dateTimeFilter } from '@/utils/filters'
 import { getMonthCount, getMonthFirstDay } from '@/utils/utils'
 import { MONTH_LIST } from '@/utils/constants'
 import { Swiper, SwiperSlide } from 'vue-awesome-swiper'
+import DepensesWelcome from '@/components/Depenses/DepensesWelcome.vue';
 export default {
   name: 'Home',
   metaInfo: {
@@ -94,6 +105,7 @@ export default {
     GkContainer,
     Swiper,
     SwiperSlide,
+    DepensesWelcome,
   },
   filters: {
     amountFilter (val) {
@@ -112,6 +124,7 @@ export default {
       activeCategory: null,
       activeMonth: null,
       popVisible: false,
+      userCounts: null,
       swiperOptions: {
         loop: false,
         navigation: {
@@ -133,6 +146,10 @@ export default {
           categoryId : this.$route.query.categoryId,
         }
       },
+      update (data) {
+        this.checkDataCount(data.depenses)
+        return data.depenses
+      }
     },
     activeCategory: {
       query: SINGLE_CATEGORY_QUERY,
@@ -150,10 +167,26 @@ export default {
   mounted () {
     document.body.classList.add("page");
     this.swiper.slideTo(3, 10, false)
+    this.checkDataCount(this.depenses)
   },
   computed: {
     isLoading () {
       return this.depenses.length === 0 && this.$apollo.loading
+    },
+    shouldAddCurr () {
+      return !this.userCounts || this.userCounts.currencies === 0
+    },
+    showPlusButton () {
+      return !this.modalVisible && !this.shouldAddCurr
+    },
+    showAddCategory () {
+      return this.userCounts && this.userCounts.categories === 0
+    },
+    showAddCurrency () {
+      return this.userCounts && this.userCounts.currencies === 0
+    },
+    showAddExpenses () {
+      return this.userCounts && this.depenses.length === 0
     },
     monthsAfterOct2021 () {
       const count = getMonthCount("2021-11-01", new Date())
@@ -261,6 +294,27 @@ export default {
       if (!dep.category) return
       this.$router.push(`/?categoryId=${dep.category.id}`)
     },
+    async checkDataCount (depenses) {
+      const activeMonth = new Date(new Date(this.activeMonth).setDate(1)).setHours(0, 0, 0, 0)
+      const todayMonth = new Date(new Date().setDate(1)).setHours(0, 0, 0, 0)
+      if (activeMonth === todayMonth && depenses.length === 0) {
+        console.log(`get counts...`)
+        try {
+          if (this.$apollo.queries.userCounts) {
+            console.log(`refetching: `, this.$apollo.queries.userCounts)
+            return this.$apollo.queries.userCounts.refetch()
+          }
+          const { data } = await this.$apollo.addSmartQuery('userCounts', {
+            query: USER_COUNTS_QUERY,
+            // pollInterval: 300
+          })
+          console.log(`data: `, data)
+          // this.userCounts = data.userCounts
+        } catch (error) {
+          console.log('error', error);
+        }
+      }
+    },
   },
 }
 </script>
@@ -269,9 +323,11 @@ export default {
 .is-loading {
   color: transparent;
 }
+.home {
+  padding-bottom: 100px;
+}
 .depenses {
   width: 100%;
-  padding-bottom: 100px;
   &__heading {
     display: flex;
     align-items: center;
