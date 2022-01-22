@@ -32,6 +32,26 @@ module.exports = {
     }
     return dateToString(parent.createdAt);
   },
+  convertedAmount: async (parent, input, { currentUser }) => {
+    if (parent.currency && parent.currency.id) {
+      console.log(`===========`);
+      console.log("parent.currency", parent.currency.id);
+      console.log("isPrimary", parent.currency.isPrimary);
+      if (!parent.currency.isPrimary) {
+        console.log(`+++++++++++++++++`);
+        const primaryCurr = await Currency.findOne({
+          createdBy: currentUser && currentUser.id,
+          isPrimary: true,
+        });
+        if (primaryCurr) {
+          const currentRate = primaryCurr.rates.find((i) => i.currencyTo.equals(parent.currency.id));
+          console.log(`currentRate: `, currentRate);
+          return currentRate ? Math.round(parent.amount / currentRate.amount) : parent.amount;
+        }
+      }
+    }
+    return parent.amount;
+  },
   createdBy: async (_parent, _input, { currentUser }) => {
     // if (!currentUser) return null
     try {
