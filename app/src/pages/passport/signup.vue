@@ -1,6 +1,11 @@
 <template>
   <div class="signup">
     <template v-if="!codeMode">
+      <div class="signup__item" v-if="error">
+        <ka-alert type="warning" outlined canClose>
+          <p style="font-size: 14px">{{ error | formatError }}</p>
+        </ka-alert>
+      </div>
       <div class="signup__item">
         <ka-input passport v-model.trim="name" placeholder="Name..." />
       </div>
@@ -23,6 +28,13 @@
         <passport-code v-model="code" @submit="onVerifyCode" :disabled="isLoading" />
       </div>
       <div class="signup__code-expires">Code will expire in {{ remainingTime | formatCodeTime }}</div>
+      <div class="signup__code-alert">
+        <ka-alert type="warning" flat outlined>
+          <h3>Don't see an email?</h3>
+          <br/>
+          <p>Check your spams</p>
+        </ka-alert>
+      </div>
     </div>
   </div>
 </template>
@@ -49,6 +61,13 @@ export default {
       }
       return `${fillZero(minutes)}:${fillZero(seconds)}`
     },
+    formatError (str = "") {
+      if (!str) return ""
+      if (str.startsWith('GraphQL error: ')) {
+        return str.slice('GraphQL error: '.length)
+      }
+      return str
+    }
   },
   data () {
     return {
@@ -62,6 +81,7 @@ export default {
       lastLoadedTime: 0,
       counts: 0,
       intervalId: null,
+      error: ""
     }
   },
   computed: {
@@ -117,7 +137,7 @@ export default {
         this.handleShowCode()
       } catch (error) {
         console.log(`error: `, error)
-        this.errorLogin = error.message
+        this.error = error.message
       } finally {
         this.loading = false;
       }
@@ -173,6 +193,9 @@ export default {
     }
     &-expires {
       text-align: right;
+    }
+    &-alert {
+      margin-top: 50px;
     }
   }
 }
