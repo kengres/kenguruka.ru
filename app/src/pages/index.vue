@@ -18,7 +18,10 @@
                   <span v-if="activeCategory" class="tt-c">{{ activeCategory.name }} &nbsp;</span>
                   <span :class="{'fz-16': !!activeCategory}">{{ getCurrentMonth(item)}}</span>
                 </h2>
-                <div class="depenses__amount" :class="{'is-loading': $apollo.loading}">{{ total | amountFilter }}</div>
+                <div class="depenses__amount" :class="{'is-loading': $apollo.loading}">
+                  {{ total | amountFilter }}
+                  <small class="depenses__amount-small" v-if="primaryCurrency">{{ primaryCurrency.abbreviation }}</small>
+                </div>
               </swiper-slide>
             </template>
             <div class="swiper-button-prev" slot="button-prev">
@@ -45,6 +48,7 @@
               :title="dep.name"
               :amount="moneyFilterVal(dep.amount)"
               :category-name="dep.category && dep.category.name"
+              :currency-name="dep.currency && dep.currency.abbreviation"
               :date="dateFilterVal(dep.date)"
               :on-category="() => handleCategory(dep)"
             />
@@ -86,6 +90,7 @@ import 'swiper/css/swiper.css'
 import { DEPENSES_QUERY, DEPENSES_DELETE_MUTATION } from "@/graphql/depenses";
 import { USER_COUNTS_QUERY } from "@/graphql/users";
 import { SINGLE_CATEGORY_QUERY } from "@/graphql/categories";
+import { CURRENCIES_QUERY } from "@/graphql/currencies";
 import DepensesAdd from '@/components/Depenses/DepensesAdd.vue';
 import DepensesItem from '@/components/Depenses/DepensesItem.vue';
 import GkContainer from '@/components/Reusable/GkContainer.vue';
@@ -120,6 +125,7 @@ export default {
       loading: true,
       modalVisible: false,
       depenses: [],
+      currencies: [],
       depenseEdit: null,
       activeCategory: null,
       activeMonth: null,
@@ -163,6 +169,7 @@ export default {
         return data.category
       }
     },
+    currencies: CURRENCIES_QUERY
   },
   mounted () {
     document.body.classList.add("page");
@@ -198,7 +205,7 @@ export default {
     },
     total() {
       return this.depenses
-        .map(i => i.amount)
+        .map(i => i.convertedAmount)
         .reduce((a, b) => {
           return a + b;
         }, 0);
@@ -224,6 +231,9 @@ export default {
         const val = `${MONTH_LIST[new Date(date).getMonth()].split(":")[0]} ${new Date(date).getFullYear()}`
         return this.activeCategory ? `(${val})` : val
       }
+    },
+    primaryCurrency () {
+      return this.currencies.find(curr => curr.isPrimary)
     },
   },
   watch: {
@@ -261,7 +271,6 @@ export default {
       this.onDelete(this.depenseEdit)
     },
     async onDelete(item) {
-      // console.log(`on delet: `, item)
       try {
         await this.$apollo.mutate({
           mutation: DEPENSES_DELETE_MUTATION,
@@ -298,19 +307,15 @@ export default {
       const activeMonth = new Date(new Date(this.activeMonth).setDate(1)).setHours(0, 0, 0, 0)
       const todayMonth = new Date(new Date().setDate(1)).setHours(0, 0, 0, 0)
       if (activeMonth === todayMonth && depenses.length === 0) {
-        console.log(`get counts...`)
         try {
           if (this.$apollo.queries.userCounts) {
-            console.log(`refetching: `, this.$apollo.queries.userCounts)
             return this.$apollo.queries.userCounts.refetch()
           }
-          const { data } = await this.$apollo.addSmartQuery('userCounts', {
+          await this.$apollo.addSmartQuery('userCounts', {
             query: USER_COUNTS_QUERY,
-            // pollInterval: 300
           })
-          console.log(`data: `, data)
-          // this.userCounts = data.userCounts
         } catch (error) {
+          // eslint-disable-next-line
           console.log('error', error);
         }
       }
@@ -367,6 +372,9 @@ export default {
     font-size: 48px;
     font-weight: 700;
     margin-top: 24px;
+    &-small {
+      font-size: 0.5em;
+    }
   }
   &__list {
     list-style-type: none;

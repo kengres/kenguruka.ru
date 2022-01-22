@@ -60,7 +60,6 @@ export default {
         username: this.username,
         password: this.password,
       }
-      // console.log(`variables`, variables)
       try {
         this.loading = true;
         const { data: { logUserIn: { token, refreshToken } } } = await this.$apollo.mutate({
@@ -69,15 +68,11 @@ export default {
         })
         await onLogin(this.$apolloProvider.defaultClient, token, refreshToken);
         if (this.firstLogin) {
-          // console.log(`first login...`)
           this.$router.push(`/?ac=frst-lgn`)
         } else {
-          // console.log(`not first login...`)
           this.$router.push(`/`)
         }
       } catch (error) {
-        // eslint-disable-next-line
-        console.log(`error: `, error)
         this.error = error.message
       } finally {
         this.loading = false;

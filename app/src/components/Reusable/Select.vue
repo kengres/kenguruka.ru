@@ -4,11 +4,11 @@
     :options="options"
     :label="label"
     :value="value"
-    aria-placeholder="Choisir..."
-    placeholder="Choisir..."
+    :aria-placeholder="placeholder"
+    :placeholder="placeholder"
     @input="onSelect"
     :disabled="disabled"
-    :components="{Deselect, OpenIndicator}"
+    :components="selectComps"
   />
 </template>
 
@@ -35,9 +35,17 @@ export default {
       type: String,
       default: ""
     },
+    placeholder: {
+      type: String,
+      default: "Choisir..."
+    },
     disabled: {
       type: Boolean,
       default: false
+    },
+    canClear: {
+      type: Boolean,
+      default: true
     },
   },
   data () {
@@ -46,9 +54,20 @@ export default {
       OpenIndicator: SelectIndicator,
     }
   },
+  computed: {
+    selectComps () {
+      const obj = {
+        Deselect: null,
+        OpenIndicator: SelectIndicator,
+      }
+      if (this.canClear) {
+        obj.Deselect = SelectClear
+      }
+      return obj
+    },
+  },
   methods: {
     onSelect (value) {
-      // console.log(`onSelect value: `, value);
       this.$emit("input", value)
     },
   },

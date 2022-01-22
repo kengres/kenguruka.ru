@@ -2,7 +2,7 @@
   <div class="depense-item">
     <div class="depense-item__heading">
       <div class="depense-item__title">{{ $options.capitalizeFirstLetter(props.title) }}</div>
-      <div class="depense-item__amount">{{ props.amount }}</div>
+      <div class="depense-item__amount">{{ props.amount }} {{ props.currencyName }}</div>
     </div>
     <div class="depense-item__footer">
       <div class="depense-item__date">{{ props.date }}</div>
@@ -33,6 +33,10 @@ export default {
       default: ""
     },
     categoryName: {
+      type: String,
+      default: ""
+    },
+    currencyName: {
       type: String,
       default: ""
     },

@@ -41,7 +41,7 @@ module.exports = {
     }
 
     try {
-      const result = await Depense.find(filters).sort("-date");
+      const result = await Depense.find(filters).sort("-date").populate('currency');
       // console.log(`result: `, result)
       return result;
     } catch (e) {
