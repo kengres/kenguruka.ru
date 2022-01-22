@@ -55,6 +55,11 @@ export default {
       return this.categories.length === 0 && this.$apollo.loading
     },
   },
+  created () {
+    if (this.$route.query.add === "1") {
+      this.modalVisible = true
+    }
+  },
   methods: {
     async onSubmit () {
       const variables = {
@@ -70,6 +75,9 @@ export default {
           variables
         })
         this.modalVisible = false
+        if (this.$route.query.back === "1") {
+          return this.$router.back()
+        }
         this.categoryName = ""
         this.categoryEdit = null
         this.refetch()

@@ -1,4 +1,7 @@
 const User = require("../../models/user");
+const Depense = require("../../models/depense");
+const Category = require("../../models/category");
+const Currency = require("../../models/currency");
 
 module.exports = {
   users: async (__, ___, { currentUser }) => {
@@ -8,6 +11,25 @@ module.exports = {
     try {
       const users = await User.find().sort({ createdAt: -1 });
       return users;
+    } catch (error) {
+      throw error;
+    }
+  },
+  userCounts: async (__, ___, { currentUser }) => {
+    if (!currentUser || !currentUser.active) {
+      throw new ForbiddenError("Unauthorized!");
+    }
+    try {
+      const filters = {
+        createdBy: currentUser.id
+      }
+      const promises = [
+        Depense.countDocuments(filters),
+        Category.countDocuments(filters),
+        Currency.countDocuments(filters),
+      ]
+      const [depenses, categories, currencies] = await Promise.all(promises)
+      return { depenses, categories, currencies };
     } catch (error) {
       throw error;
     }

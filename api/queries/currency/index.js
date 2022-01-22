@@ -12,18 +12,6 @@ module.exports = {
 
     try {
       let result = await Currency.find(filters);
-      if (result.length === 0) {
-        // todo: customize by lang and country
-        const newCurr = new Currency({
-          name: "Burundian Franc",
-          abbreviation: "BIF",
-          createdBy: currentUser.id,
-          updatedBy: currentUser.id,
-        });
-        await newCurr.save() 
-        result = await Currency.find(filters);
-      }
-      // console.log(`result: `, result)
       return result;
     } catch (e) {
       console.log(`e: `, e);

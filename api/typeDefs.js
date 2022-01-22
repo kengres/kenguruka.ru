@@ -72,6 +72,7 @@ module.exports = gql`
     me: User
     # me @client: User
     users: [User!]!
+    userCounts: JSON
     # user(id: ID!): User
     # DEPENSES
     depenses(monthDate: String, categoryId: ID): [Depense!]!

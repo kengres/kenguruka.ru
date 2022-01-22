@@ -132,6 +132,13 @@ export const SINGLE_USER_QUERY = gql`
 `;
 
 
+export const USER_COUNTS_QUERY = gql`
+         query UserCounts {
+           userCounts
+         }
+       `;
+
+
 export const CREATE_ACCOUNT_MUTATION = gql`
   mutation CreateAccount($name: String!, $username: String!, $password: String!) {
     createAccount(name: $name, username: $username, password: $password)

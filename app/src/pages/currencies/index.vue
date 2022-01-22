@@ -2,6 +2,7 @@
   <div class="currencies">
     <h1 class="currencies__title">currencies</h1>
     <ka-app-loader v-if="isLoading" />
+    <ka-app-empty v-if="!isLoading && currencies.length === 0" />
     <ul class="currencies__list">
       <li class="currencies__item" v-for="curr in currencies" :key="curr.id" @click="onUpdateStart(curr)">
         <currencies-item v-bind="curr" />
@@ -85,6 +86,11 @@ export default {
       }
     },
   },
+  created () {
+    if (this.$route.query.add === "1") {
+      this.modalVisible = true
+    }
+  },
   methods: {
     updateRates (currencies) {
       this.form.rates = currencies.map(({ id }) => ({ amount: "", currencyTo: id }))
@@ -108,6 +114,9 @@ export default {
           variables
         })
         this.modalVisible = false
+        if (this.$route.query.back === "1") {
+          return this.$router.back()
+        }
         this.resetForm()
         this.currencyEdit = null
         this.refetch()

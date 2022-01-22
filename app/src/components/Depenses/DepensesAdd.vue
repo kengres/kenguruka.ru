@@ -73,6 +73,14 @@ export default {
       immediate: true,
     }
   },
+  created () {
+    if (this.$apollo.queries.currencies) {
+      this.$apollo.queries.currencies.refetch()
+    }
+    if (this.$apollo.queries.categories) {
+      this.$apollo.queries.categories.refetch()
+    }
+  },
   methods: {
     updateForm (isEdit) {
       console.log(`isEditMode watch: `, isEdit)

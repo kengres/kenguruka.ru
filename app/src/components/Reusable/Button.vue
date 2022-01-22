@@ -193,6 +193,11 @@ export default {
   border-color: var(--color-success--light);
   color: #fff;
 }
+.is-warning {
+  background-color: var(--color-warning);
+  border-color: var(--color-warning--light);
+  color: #fff;
+}
 .is-info {
   background-color: var(--color-info);
   border-color: var(--color-info--light);
