@@ -19,8 +19,8 @@ module.exports = gql`
     id: ID!
     name: String!
     notes: String
-    amount: Int
-    # displayedAmount: String
+    amount: Float
+    convertedAmount: Float
     date: String
     currency: Currency
     category: Category
