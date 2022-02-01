@@ -198,8 +198,9 @@ export default {
     monthsAfterOct2021 () {
       const count = getMonthCount("2021-11-01", new Date())
       const arr = []
+      const thisMonth = new Date().getMonth()
       for (let i = 0; i < count; i++) {
-        arr.unshift(getMonthFirstDay(new Date().setMonth(-i)))
+        arr.unshift(getMonthFirstDay(new Date().setMonth(thisMonth - i)))
       }
       return arr
     },

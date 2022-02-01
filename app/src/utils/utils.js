@@ -17,6 +17,12 @@ export const formtDateToLocal = (date) => {
 export const getMonthCount = (to, from) => {
   let d1 = new Date(from);
   let d2 = new Date(to);
+  // console.log('isNaN(d1.getTime()): ', isNaN(d1.getTime()))
+  // console.log('isNaN(d2.getTime()): ', isNaN(d2.getTime()))
+  if (isNaN(d1.getTime()) || isNaN(d2.getTime())) {
+    // console.log(`======= returning`);
+    return 0;
+  }
 
   if (d1.getTime() > d2.getTime()) {
     d1 = new Date(to);
